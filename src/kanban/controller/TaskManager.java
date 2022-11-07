@@ -64,24 +64,21 @@ public class TaskManager {
 
         if (epic == null) return;
         boolean hasInProgress = false;
-        boolean hasDone = false;
         boolean hasNew = false;
         for (SubTask subTask : epic.getSubTasks().values()) {
             if (subTask.getStatus() == TaskStatus.IN_PROGRESS) {
                 hasInProgress = true;
                 break;
-            } else if (subTask.getStatus() == TaskStatus.DONE) {
-                hasDone = true;
-            } else {
+            } else if (subTask.getStatus() == TaskStatus.NEW) {
                 hasNew = true;
             }
         }
         if (hasInProgress) {
             epic.setStatus(TaskStatus.IN_PROGRESS);
-        } else if (hasDone && !hasNew) {
-            epic.setStatus(TaskStatus.DONE);
-        } else {
+        } else if (hasNew) {
             epic.setStatus(TaskStatus.NEW);
+        } else {
+            epic.setStatus(TaskStatus.DONE);
         }
     }
 
