@@ -76,9 +76,9 @@ public class TaskManager {
                 hasNew = true;
             }
         }
-        if (hasInProgress) {
+        if (hasInProgress || hasDone && hasNew) {
             epic.setStatus(TaskStatus.IN_PROGRESS);
-        } else if (hasDone && !hasNew) {
+        } else if (hasDone) {
             epic.setStatus(TaskStatus.DONE);
         } else {
             epic.setStatus(TaskStatus.NEW);
