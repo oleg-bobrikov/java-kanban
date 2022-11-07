@@ -1,10 +1,10 @@
-package Model;
+package kanban.model;
 
 import java.util.HashMap;
 
 public class Epic extends Task {
 
-    protected HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
     public HashMap<Integer, SubTask> getSubTasks() {
         return subTasks;

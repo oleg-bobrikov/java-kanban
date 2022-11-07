@@ -1,9 +1,10 @@
+package kanban.view;
 
-import Model.Enum;
-import Model.Epic;
-import Model.SubTask;
-import Model.Task;
-import Model.TaskManager;
+import kanban.controller.TaskManager;
+import kanban.model.Epic;
+import kanban.model.SubTask;
+import kanban.model.Task;
+import kanban.model.TaskStatus;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,7 +15,6 @@ public class Main {
         Epic epic1 = taskManager.getEpic(3);
         SubTask subTask1 = taskManager.getSubTask(4);
         SubTask subTask2 = taskManager.getSubTask(5);
-        Epic epic2 = taskManager.getEpic(6);
         SubTask subTask3 = taskManager.getSubTask(7);
 
 
@@ -29,15 +29,11 @@ public class Main {
         System.out.println();
         System.out.println();
         System.out.println("Тестовый сценарий №2");
-        taskManager.updateStatus(task1, Enum.TaskStatus.DONE);
-        taskManager.updateStatus(task2, Enum.TaskStatus.IN_PROGRESS);
-        taskManager.updateStatus(subTask1, Enum.TaskStatus.DONE);
-        taskManager.updateStatus(subTask2, Enum.TaskStatus.IN_PROGRESS);
-        taskManager.updateStatus(subTask3, Enum.TaskStatus.DONE);
-
-        // У эпиков запрещено менять статус.Он должен изменяться автоматически
-        taskManager.updateStatus(epic1, Enum.TaskStatus.NEW);
-        taskManager.updateStatus(epic2, Enum.TaskStatus.NEW);
+        task1.setStatus(TaskStatus.DONE);
+        task2.setStatus(TaskStatus.IN_PROGRESS);
+        taskManager.updateSubTaskStatus(subTask1, TaskStatus.DONE);
+        taskManager.updateSubTaskStatus(subTask2, TaskStatus.IN_PROGRESS);
+        taskManager.updateSubTaskStatus(subTask3, TaskStatus.DONE);
 
         printTaskList(taskManager);
 
@@ -46,61 +42,29 @@ public class Main {
         System.out.println();
         System.out.println();
         System.out.println("Тестовый сценарий №3");
-        taskManager.deleteTask(task2);
-        taskManager.deleteEpic(epic1);
+        taskManager.deleteTask(2);
+        taskManager.deleteEpic(epic1.getId());
         printTaskList(taskManager);
 
-        // Тестовый сценарий №4
-        // Методы, исполнение которых требуется по техническому заданию
-        taskManager.getTasks();
-        taskManager.getSubTasks();
-        taskManager.getEpics();
-        taskManager.deleteTasks();
-        taskManager.deleteSubTasks();
-
-        createTasks(taskManager);
-        taskManager.deleteEpics();
-        taskManager.deleteTasks();
-
-        createTasks(taskManager);
-        taskManager.deleteTask(1);
-        taskManager.deleteSubTask(7);
-        taskManager.deleteEpic(3);
-
-        createTasks(taskManager);
-        taskManager.getSubTasksByEpic(taskManager.getEpic(1));
-        taskManager.updateTask(taskManager.getTask(1));
-        taskManager.updateSubTask(taskManager.getSubTask(4));
-        taskManager.updateEpic(taskManager.getEpic(3));
     }
 
     private static void printTaskList(TaskManager taskManager) {
         System.out.println("Список задач:");
         System.out.println("---------------------------------------------");
 
-        for (Task task : taskManager.getTasks().values()) {
-            System.out.println("Задача:");
-            System.out.println("Уникальный идентификационный номер: " + task.getId());
-            System.out.println("Наименование: " + task.getName());
-            System.out.println("Описание: " + task.getDescription());
-            System.out.println("Статус: " + task.getStatus());
+        for (Task task : taskManager.getTasks()) {
+            System.out.println(task);
             System.out.println("---------------------------------------------");
         }
 
-        for (Epic epic : taskManager.getEpics().values()) {
+        for (Epic epic : taskManager.getEpics()) {
             System.out.println("*****************************************");
             System.out.println("Эпик:");
-            System.out.println("Уникальный идентификационный номер: " + epic.getId());
-            System.out.println("Наименование: " + epic.getName());
-            System.out.println("Описание: " + epic.getDescription());
-            System.out.println("Статус: " + epic.getStatus());
+            System.out.println(epic);
             System.out.println("*****************************************");
             for (SubTask subTask : epic.getSubTasks().values()) {
                 System.out.println("Подзадача:");
-                System.out.println("Уникальный идентификационный номер: " + subTask.getId());
-                System.out.println("Наименование: " + subTask.getName());
-                System.out.println("Описание: " + subTask.getDescription());
-                System.out.println("Статус: " + subTask.getStatus());
+                System.out.println(subTask);
                 System.out.println("---------------------------------------------");
             }
         }
