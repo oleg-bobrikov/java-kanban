@@ -50,22 +50,15 @@ public class Main {
 
     private static void printTaskList(TaskManager taskManager) {
         System.out.println("Список задач:");
-        System.out.println("---------------------------------------------");
-
         for (Task task : taskManager.getTasks()) {
             System.out.println(task);
-            System.out.println("---------------------------------------------");
         }
-
+        System.out.println("Эпики:");
         for (Epic epic : taskManager.getEpics()) {
-            System.out.println("*****************************************");
-            System.out.println("Эпик:");
             System.out.println(epic);
-            System.out.println("*****************************************");
+
             for (SubTask subTask : epic.getSubTasks().values()) {
-                System.out.println("Подзадача:");
                 System.out.println(subTask);
-                System.out.println("---------------------------------------------");
             }
         }
     }

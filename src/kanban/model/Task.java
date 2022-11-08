@@ -45,12 +45,11 @@ public class Task {
         this.status = TaskStatus.NEW;
     }
 
-    @Override
     public String toString() {
-        if (this.description.isEmpty()) {
-            return this.name;
-        } else {
-            return "id: " + this.id + " " + this.name + " (" + this.description + "): "+this.status;
+        String description = " ";
+        if (!this.description.isEmpty()) {
+            description = " (" + this.description + "): ";
         }
+        return "Задача: " + "id: " + this.id + " " + this.name + description + this.status;
     }
 }

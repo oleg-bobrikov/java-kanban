@@ -26,24 +26,24 @@ public class TaskManager {
         return new ArrayList<>(epics.values());
     }
 
-    public boolean addTask(Task task) {
+    public Task addTask(Task task) {
         // Обновление свойств
         task.setId(++lastUsedId);
         task.setStatus(TaskStatus.NEW);
         tasks.put(task.getId(), task);
 
-        return true;
+        return task;
     }
 
-    public boolean addSubTask(SubTask subTask) {
+    public SubTask addSubTask(SubTask subTask) {
         // Проверка на существоание эпика
         if (subTask == null || subTask.getEpic() == null) {
-            return false;
+            return null;
         }
         Epic epic = epics.get(subTask.getEpic().getId());
         // проверяем существоание эпика по id
         if (epic == null) {
-            return false;
+            return null;
         }
         // восстановление ссылочной целостности
         subTask.setId(++lastUsedId);
@@ -57,12 +57,14 @@ public class TaskManager {
         // Обновление статуса эпика
         updateEpicStatus(epic);
 
-        return true;
+        return subTask;
     }
 
     private void updateEpicStatus(Epic epic) {
 
-        if (epic == null) return;
+        if (epic == null){
+            return;
+        }
         boolean hasInProgress = false;
         boolean hasDone = false;
         boolean hasNew = false;
@@ -85,7 +87,7 @@ public class TaskManager {
         }
     }
 
-    public boolean addEpic(Epic epic) {
+    public Epic addEpic(Epic epic) {
         //Обновление свойств
         epic.setId(++lastUsedId);
         epic.setStatus(TaskStatus.NEW);
@@ -93,7 +95,7 @@ public class TaskManager {
         //Добавление эпика в список
         epics.put(epic.getId(), epic);
 
-        return true;
+        return epic;
     }
 
     public void updateSubTaskStatus(SubTask subTask, TaskStatus status) {
@@ -166,31 +168,31 @@ public class TaskManager {
         epics.remove(id);
     }
 
-    public boolean updateTask(Task task) {
+    public Task updateTask(Task task) {
         // Проверка на существование задачи
         Task taskToUpdate = tasks.get(task.getId());
         if (taskToUpdate == null) {
-            return false;
+            return null;
         }
         taskToUpdate.setName(task.getName());
         taskToUpdate.setDescription(task.getDescription());
         taskToUpdate.setStatus(task.getStatus());
-        return true;
+        return null;
     }
 
-    public boolean updateSubTask(SubTask newSubTask) {
+    public SubTask updateSubTask(SubTask newSubTask) {
 
         // проверка на существование подзадачи
         SubTask oldSubTask = subTasks.get(newSubTask.getId());
         if (oldSubTask == null) {
-            return false;
+            return null;
         }
         Epic oldEpic = oldSubTask.getEpic();
 
         // проверка на существоание нового эпика
         Epic newEpic = epics.get(newSubTask.getEpic().getId());
         if (epics.get(newEpic.getId()) == null) {
-            return false;
+            return null;
         }
 
         // удаление подзадачи из старого эпика, если ее нет в новом.
@@ -209,20 +211,20 @@ public class TaskManager {
         // Обновление старой подзадачи в новом эпике
         newEpic.getSubTasks().put(oldSubTask.getId(), oldSubTask);
         updateEpicStatus(oldSubTask.getEpic());
-        return true;
+        return oldSubTask;
     }
 
-    public boolean updateEpic(Epic newEpic) {
+    public Epic updateEpic(Epic newEpic) {
         // проверка на существование эпика
         Epic oldEpic = epics.get(newEpic.getId());
         if (oldEpic == null) {
-            return false;
+            return null;
         }
 
         // проверка на существоание подзадач
         for (SubTask subTask : newEpic.getSubTasks().values()) {
             if (subTasks.get(subTask.getId()) == null) {
-                return false;
+                return null;
             }
         }
 
@@ -239,7 +241,7 @@ public class TaskManager {
             oldEpic.getSubTasks().put(subTask.getId(), subTasks.get(subTask.getId()));
         }
         updateEpicStatus(oldEpic);
-        return true;
+        return oldEpic;
 
     }
 

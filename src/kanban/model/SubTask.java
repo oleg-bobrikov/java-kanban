@@ -7,6 +7,15 @@ public class SubTask extends Task {
         return epic;
     }
 
+    @Override
+    public String toString() {
+        String description = " ";
+        if (!this.description.isEmpty()) {
+            description = " (" + this.description + "): ";
+        }
+        return "Подзадача: " + "id: " + this.id + " " + this.name + description + this.status;
+    }
+
     public void setEpic(Epic epic) {
         this.epic = epic;
     }
@@ -17,4 +26,4 @@ public class SubTask extends Task {
         this.epic = epic;
     }
 
- }
+}
