@@ -1,20 +1,27 @@
-package kanban.managers;
+package ru.yandex.practicum.bobrikov.kanban.managers.taskmanager;
 
-import kanban.model.Epic;
-import kanban.model.SubTask;
-import kanban.model.Task;
-import kanban.model.TaskStatus;
+import ru.yandex.practicum.bobrikov.kanban.managers.historymanager.HistoryManager;
+
+import ru.yandex.practicum.bobrikov.kanban.model.Epic;
+import ru.yandex.practicum.bobrikov.kanban.model.SubTask;
+import ru.yandex.practicum.bobrikov.kanban.model.Task;
+import ru.yandex.practicum.bobrikov.kanban.model.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int lastAssignedId = 0; //Последний назначенный идентификатор задачи, подзадачи, эпика
+    private int lastAssignedId; //Последний назначенный идентификатор задачи, подзадачи, эпика
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
 
-    private final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+    private final HistoryManager historyManager;
+
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.lastAssignedId = 0;
+        this.historyManager = historyManager;
+    }
 
     @Override
     public ArrayList<Task> getTasks() {
@@ -106,6 +113,7 @@ public class InMemoryTaskManager implements TaskManager {
         return epic;
     }
 
+    @Override
     public void updateSubTaskStatus(SubTask subTask, TaskStatus status) {
         subTask.setStatus(status);
         updateEpicStatus(subTask.getEpic());

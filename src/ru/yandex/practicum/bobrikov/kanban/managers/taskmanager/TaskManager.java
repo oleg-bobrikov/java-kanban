@@ -1,8 +1,11 @@
-package kanban.managers;
+package ru.yandex.practicum.bobrikov.kanban.managers.taskmanager;
 
-import kanban.model.Epic;
-import kanban.model.SubTask;
-import kanban.model.Task;
+import ru.yandex.practicum.bobrikov.kanban.managers.historymanager.HistoryManager;
+import ru.yandex.practicum.bobrikov.kanban.model.Epic;
+import ru.yandex.practicum.bobrikov.kanban.model.SubTask;
+import ru.yandex.practicum.bobrikov.kanban.model.Task;
+import ru.yandex.practicum.bobrikov.kanban.model.TaskStatus;
+
 import java.util.ArrayList;
 
 public interface TaskManager {
@@ -47,5 +50,6 @@ public interface TaskManager {
 
     HistoryManager getHistoryManager();
 
+    void updateSubTaskStatus(SubTask subTask, TaskStatus status);
 
 }

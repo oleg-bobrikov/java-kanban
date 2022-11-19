@@ -1,4 +1,4 @@
-package kanban.model;
+package ru.yandex.practicum.bobrikov.kanban.model;
 
 public class SubTask extends Task {
     private Epic epic; // эпик, в рамках которого выполняется эта подзадача

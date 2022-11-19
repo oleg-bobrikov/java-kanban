@@ -1,55 +1,53 @@
-import kanban.model.Epic;
-import kanban.model.SubTask;
-import kanban.model.Task;
-import kanban.managers.HistoryManager;
-import kanban.managers.Managers;
-import kanban.managers.TaskManager;
+import ru.yandex.practicum.bobrikov.kanban.model.Epic;
+import ru.yandex.practicum.bobrikov.kanban.model.SubTask;
+import ru.yandex.practicum.bobrikov.kanban.model.Task;
+import ru.yandex.practicum.bobrikov.kanban.managers.Managers;
+import ru.yandex.practicum.bobrikov.kanban.managers.taskmanager.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
-        HistoryManager historyManager = taskManager.getHistoryManager();
 
         // Тестовый сценарий №1
         createTasks(taskManager);
         Task task1 = taskManager.getTask(1);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         Task task2 = taskManager.getTask(2);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         Epic epic1 = taskManager.getEpic(3);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         SubTask subTask1 = taskManager.getSubTask(4);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         SubTask subTask2 = taskManager.getSubTask(5);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         SubTask subTask3 = taskManager.getSubTask(7);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         Task task3 = taskManager.getTask(8);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         Task task4 = taskManager.getTask(9);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         Task task5 = taskManager.getTask(10);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         Task task6 = taskManager.getTask(11);
-        printHistory(historyManager);
+        printHistory(taskManager);
 
         // Первая задача из истории просмотра должна удалиться
         Task task7 = taskManager.getTask(12);
-        printHistory(historyManager);
+        printHistory(taskManager);
     }
 
-    private static void printHistory(HistoryManager historyManager) {
+    private static void printHistory(TaskManager taskManager) {
         System.out.println("Список просмотренных задач:");
-        for (Task task : historyManager.getHistory()) {
+        for (Task task : taskManager.getHistoryManager().getHistory()) {
             System.out.println(task);
         }
         System.out.println();

@@ -1,6 +1,6 @@
-package kanban.managers;
+package ru.yandex.practicum.bobrikov.kanban.managers.historymanager;
 
-import kanban.model.Task;
+import ru.yandex.practicum.bobrikov.kanban.model.Task;
 
 import java.util.ArrayList;
 

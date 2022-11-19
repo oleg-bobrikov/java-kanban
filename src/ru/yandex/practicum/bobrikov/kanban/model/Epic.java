@@ -1,4 +1,4 @@
-package kanban.model;
+package ru.yandex.practicum.bobrikov.kanban.model;
 
 import java.util.HashMap;
 
