@@ -238,13 +238,14 @@ class InMemoryTaskManagerTest {
 
         // Создадим подзадачу 1 вместе с эпиком 1 в статусе DONE
         SubTask subtask1 = createSubTask1();
-        taskManager.updateSubTaskStatus(subtask1, TaskStatus.DONE);
+        subtask1.setStatus(TaskStatus.DONE);
+        taskManager.updateSubTask(subtask1);
         Epic epic1 = subtask1.getEpic();
 
         //Создадим подзадачу 2 и эпик 2 в статусе IN_PROGRESS
         SubTask subtask2 = createSubTask2();
-        taskManager.updateSubTaskStatus(subtask2, TaskStatus.IN_PROGRESS);
-        Epic epic2 = subtask2.getEpic();
+        subtask2.setStatus(TaskStatus.IN_PROGRESS);
+       Epic epic2 = subtask2.getEpic();
 
         // Подменим id Эпика 2 на эпик 1
         epic2.setId(epic1.getId());

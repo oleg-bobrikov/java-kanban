@@ -114,12 +114,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubTaskStatus(SubTask subTask, TaskStatus status) {
-        subTask.setStatus(status);
-        updateEpicStatus(subTask.getEpic());
-    }
-
-    @Override
     public void deleteTasks() {
         tasks.clear();
     }
@@ -148,8 +142,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public HistoryManager getHistoryManager() {
-        return historyManager;
+    public ArrayList<Task> getHistory() {
+        return historyManager.getHistory();
     }
 
     @Override

@@ -23,7 +23,7 @@ class InMemoryHistoryManagerTest {
         }
         // Ожидаем в списке просмотренных задач ровно 10 вместо 11
         // и первая задача должна затереться второй
-        ArrayList<Task> history = taskManager.getHistoryManager().getHistory();
+        ArrayList<Task> history = taskManager.getHistory();
         assert history.size() == 10 && history.get(0).getName().contains("Задача: 2");
     }
 

@@ -1,3 +1,5 @@
+package ru.yandex.practicum.bobrikov.kanban;
+
 import ru.yandex.practicum.bobrikov.kanban.model.Epic;
 import ru.yandex.practicum.bobrikov.kanban.model.SubTask;
 import ru.yandex.practicum.bobrikov.kanban.model.Task;
@@ -47,7 +49,7 @@ public class Main {
 
     private static void printHistory(TaskManager taskManager) {
         System.out.println("Список просмотренных задач:");
-        for (Task task : taskManager.getHistoryManager().getHistory()) {
+        for (Task task : taskManager.getHistory()) {
             System.out.println(task);
         }
         System.out.println();
