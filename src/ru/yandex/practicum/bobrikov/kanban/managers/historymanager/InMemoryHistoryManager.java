@@ -2,11 +2,14 @@ package ru.yandex.practicum.bobrikov.kanban.managers.historymanager;
 
 import ru.yandex.practicum.bobrikov.kanban.model.Task;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final LinkedHashSet<Task> taskHistory = new LinkedHashSet<>();
+    // Самая красивая и лаконичаня реалзиация
+    //private final LinkedHashSet<Task> taskHistory = new LinkedHashSet<>();
+
+    // Учебная реализация
+    private final CustomLinkedList<Task> taskHistory = new CustomLinkedList<>();
 
     @Override
     public void add(Task task) {
@@ -21,6 +24,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public ArrayList<Task> getHistory() {
-        return new ArrayList<>(taskHistory);
+        //return new ArrayList<>(taskHistory);
+        return taskHistory.getList();
     }
 }
