@@ -6,7 +6,7 @@ import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     // Самая красивая и лаконичаня реалзиация
-    //private final LinkedHashSet<Task> taskHistory = new LinkedHashSet<>();
+        //private final LinkedHashSet<Task> taskHistory = new LinkedHashSet<>();
 
     // Учебная реализация
     private final CustomLinkedList<Task> taskHistory = new CustomLinkedList<>();

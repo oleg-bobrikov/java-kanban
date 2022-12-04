@@ -57,10 +57,10 @@ public class CustomLinkedList<T> {
             if (linkedHashMap.size() == 1) {
                 head = null;
                 tile = null;
-            } else if (node == tile) {
+            } else if (node.equals(tile)) {
                 tile = previous;
                 previous.setNext(null);
-            } else if (node == head){
+            } else if (node.equals( head)){
                this.head = node.getNext();
                next.setPrevious(null);
             }

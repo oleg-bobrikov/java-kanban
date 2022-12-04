@@ -1,7 +1,7 @@
 package ru.yandex.practicum.bobrikov.kanban.managers.historymanager;
 
 class Node<T> {
-    private T value;
+    private final T value;
     private Node<T> previous;
     private Node<T> next;
 
@@ -30,4 +30,17 @@ class Node<T> {
     public void setNext(Node<T> next) {
         this.next = next;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Node<T> node = (Node<T>) o;
+        return this.previous == node.previous && this.value == node.value && this.next == node.next;
+    }
 }
+
