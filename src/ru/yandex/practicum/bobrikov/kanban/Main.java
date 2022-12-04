@@ -13,47 +13,45 @@ public class Main {
         // Тестовый сценарий №1
         // создайте две задачи, эпик с тремя подзадачами и эпик без подзадач;
         createTasks(taskManager);
-        System.out.println(taskManager.getTasks());
-        System.out.println(taskManager.getSubTasks());
-        System.out.println(taskManager.getEpics());
+
+        // Тестовый сценарий №2
+        // запросите созданные задачи несколько раз в разном порядке;
+        // после каждого запроса выведите историю и убедитесь, что в ней нет повторов;
 
         Task task1 = taskManager.getTask(1);
+        printHistory(taskManager); // Задачи:{1}
+
         Task task2 = taskManager.getTask(2);
+        printHistory(taskManager); // Задачи:{1, 2}
+
+        Epic epic3 = taskManager.getEpic(3);
+        printHistory(taskManager); // Задачи:{1, 2, 3, 4}
+
         SubTask subTask4 = taskManager.getSubTask(4);
+        printHistory(taskManager); // Задачи:{1, 2, 3, 4}
+
         SubTask subTask5 = taskManager.getSubTask(5);
+        printHistory(taskManager); // Задачи:{1, 2, 3, 4, 5}
+
         SubTask subTask6 = taskManager.getSubTask(6);
-        //        printHistory(taskManager);
-        //
-        //        Task task2 = taskManager.getTask(2);
-        //        printHistory(taskManager);
-        //
-        //        Epic epic1 = taskManager.getEpic(3);
-        //        printHistory(taskManager);
-        //
-        //        SubTask subTask1 = taskManager.getSubTask(4);
-        //        printHistory(taskManager);
-        //
-        //        SubTask subTask2 = taskManager.getSubTask(5);
-        //        printHistory(taskManager);
-        //
-        //        SubTask subTask3 = taskManager.getSubTask(7);
-        //        printHistory(taskManager);
-        //
-        //        Task task3 = taskManager.getTask(8);
-        //        printHistory(taskManager);
-        //
-        //        Task task4 = taskManager.getTask(9);
-        //        printHistory(taskManager);
-        //
-        //        Task task5 = taskManager.getTask(10);
-        //        printHistory(taskManager);
-        //
-        //        Task task6 = taskManager.getTask(11);
-        //        printHistory(taskManager);
-        //
-        //        // Первая задача из истории просмотра должна удалиться
-        //        Task task7 = taskManager.getTask(12);
-        //        printHistory(taskManager);
+        printHistory(taskManager); // Задачи:{1, 2, 3, 4, 5, 6}
+
+        taskManager.getSubTask(4);
+        printHistory(taskManager); // Задачи:{1, 2, 3, 5, 6, 4}
+
+        taskManager.getTask(1);
+        printHistory(taskManager); // Задачи:{2, 3, 5, 6, 4, 1}
+
+        // Тестовый сценарий №3
+        // удалите задачу, которая есть в истории, и проверьте, что при печати она не будет выводиться;
+        taskManager.deleteTask(1);
+        printHistory(taskManager); // Задачи:{2, 3, 5, 6, 4}
+
+        // Тестовый сценарий №4
+        // удалите эпик с тремя подзадачами и убедитесь, что из истории удалился как сам эпик, так и все его подзадачи.
+
+        taskManager.deleteEpic(3);
+        printHistory(taskManager); // Задачи:{2}
     }
 
     private static void printHistory(TaskManager taskManager) {

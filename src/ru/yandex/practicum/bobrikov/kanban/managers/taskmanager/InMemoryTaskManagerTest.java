@@ -1,6 +1,7 @@
 package ru.yandex.practicum.bobrikov.kanban.managers.taskmanager;
 
 import ru.yandex.practicum.bobrikov.kanban.managers.Managers;
+import ru.yandex.practicum.bobrikov.kanban.managers.historymanager.HistoryManager;
 import ru.yandex.practicum.bobrikov.kanban.model.Epic;
 import ru.yandex.practicum.bobrikov.kanban.model.SubTask;
 import ru.yandex.practicum.bobrikov.kanban.model.Task;
@@ -8,6 +9,7 @@ import ru.yandex.practicum.bobrikov.kanban.model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 class InMemoryTaskManagerTest {
     private final String TASK_NAME_1 = "Задача1";
@@ -22,7 +24,10 @@ class InMemoryTaskManagerTest {
     private final String EPIC_DESCRIPTION_1 = "Описание эпика 1";
     private final String EPIC_NAME_2 = "Эпик 2";
     private final String EPIC_DESCRIPTION_2 = "Описание эпика 2";
-    TaskManager taskManager = Managers.getDefault();
+    private final TaskManager taskManager = Managers.getDefault();
+
+    private final HistoryManager historyManager = taskManager.getHistoryManager();
+
     private Task createTask1() {
         Task newTask = new Task(TASK_NAME_1, TASK_DESCRIPTION_1);
         taskManager.addTask(newTask);
@@ -70,18 +75,29 @@ class InMemoryTaskManagerTest {
     @Test
     void getTasks() {
         clearTaskManager();
-        createTask1();
-        assert taskManager.getTasks().size() == 1;
+        Task task = createTask1();
+        // Создаь историю просмотра
+        taskManager.getTask(task.getId());
+
+        assert taskManager.getTasks().size() == 1 &&
+                historyManager.getHistory().contains(task); // Проверить историю просмотра
     }
 
     @Test
     void deleteTasks() {
         clearTaskManager();
-        createTask1();
-        createTask1();
-        createTask1();
+        Task task1 = createTask1();
+        Task task2 = createTask1();
+        Task task3 = createTask1();
+
+        // Создать историю просмотра
+        taskManager.getTask(task1.getId());
+        taskManager.getTask(task2.getId());
+        taskManager.getTask(task3.getId());
+        Set<Task> testCollection = Set.of(task1, task2, task3);
+
         taskManager.deleteTasks();
-        assert taskManager.getTasks().size() == 0;
+        assert taskManager.getTasks().size() == 0 && !historyManager.getHistory().containsAll(testCollection);
 
     }
 
@@ -118,18 +134,23 @@ class InMemoryTaskManagerTest {
         clearTaskManager();
         Task task = createTask1();
         Task foundTask = taskManager.getTask(1);
-        assert task.equals(foundTask);
+        assert task.equals(foundTask) &&
+                historyManager.getHistory().contains(task); // Проверить историю просмотра
     }
 
     @Test
     void deleteTask() {
         clearTaskManager();
-        createTask1();
+        Task task1 = createTask1();
         createTask2();
-        taskManager.deleteTask(1);
-        assert taskManager.getTask(2) != null && taskManager.getTask(1) == null;
-    }
+        // Создать историю просмотра
+        taskManager.getTask(task1.getId());
 
+        taskManager.deleteTask(1);
+        assert taskManager.getTask(2) != null &&
+                taskManager.getTask(1) == null &&
+                !historyManager.getHistory().contains(task1); // Проверить историю просмотра
+    }
 
     @Test
     void getSubTasks() {
@@ -150,9 +171,16 @@ class InMemoryTaskManagerTest {
         clearTaskManager();
         SubTask subTask = createSubTask1();
         Epic epic = subTask.getEpic();
-        int id = subTask.getId();
-        taskManager.deleteSubTask(id);
-        assert taskManager.getSubTask(id) == null && epic.getSubTasks().get(id) == null;
+        // Создать историю просмотра
+        taskManager.getSubTask(subTask.getId());
+
+        // Удалить подзадача
+        taskManager.deleteSubTask(subTask.getId());
+
+        // Тест
+        assert taskManager.getSubTask(subTask.getId()) == null &&
+                epic.getSubTasks().get(subTask.getId()) == null &&
+                !historyManager.getHistory().contains(subTask); // Проверить очистку истории просмотра
     }
 
     @Test
@@ -177,31 +205,28 @@ class InMemoryTaskManagerTest {
 
     @Test
     void deleteSubTasks() {
-        SubTask task2 = createSubTask2();
+        SubTask subTask2 = createSubTask2();
+
+        // Создать историю просмотра
+        taskManager.getSubTask(subTask2.getId());
+
+        // Удалить подзадачи
         taskManager.deleteSubTasks();
+
+        // Тест
         assert taskManager.getSubTasks().isEmpty() && // Список подзадач должен быть пустой,
-                taskManager.getEpics().contains(task2.getEpic()); // а эпик 2 должен остаться
+                taskManager.getEpics().contains(subTask2.getEpic()) && // а эпик 2 должен остаться
+                !historyManager.getHistory().contains(subTask2); // и подзадача должна быть удалена из истории просмотра
     }
 
     @Test
     void getSubTask() {
         clearTaskManager();
         SubTask subTask = createSubTask1();
-        int id = subTask.getId();
-        SubTask foundSubTask = taskManager.getSubTask(id);
+        SubTask foundSubTask = taskManager.getSubTask(subTask.getId());
 
-        assert subTask.equals(foundSubTask);
-    }
-
-    @Test
-    void DeleteSubTask() {
-        clearTaskManager();
-        SubTask subtask1 = createSubTask1();
-        subtask1.setStatus(TaskStatus.DONE);
-        Epic epic = subtask1.getEpic();
-        taskManager.deleteSubTask(subtask1.getId());
-
-        assert taskManager.getSubTask(subtask1.getId()) == null && epic.getStatus() == TaskStatus.NEW;
+        assert subTask.equals(foundSubTask) &&
+                historyManager.getHistory().contains(foundSubTask); // Проверить историю просмотра
     }
 
     @Test
@@ -209,6 +234,7 @@ class InMemoryTaskManagerTest {
         clearTaskManager();
         createEpic1();
         createEpic2();
+
         assert taskManager.getEpics().size() == 2;
     }
 
@@ -226,9 +252,16 @@ class InMemoryTaskManagerTest {
         clearTaskManager();
         SubTask subTask = createSubTask1();
         Epic epic = subTask.getEpic();
+        // Создать историю просмотра
+        taskManager.getSubTask(subTask.getId());
+        taskManager.getEpic(epic.getId());
+        Set<Task> testCollection = Set.of(subTask, epic);
+        // Удалить эпик
         taskManager.deleteEpic(epic.getId());
 
-        assert taskManager.getEpic(epic.getId()) == null && taskManager.getSubTask(subTask.getId()) == null;
+        assert taskManager.getEpic(epic.getId()) == null &&
+                taskManager.getSubTask(subTask.getId()) == null &&
+                !historyManager.getHistory().containsAll(testCollection); // Проверить очистку истории просмотра
 
     }
 
@@ -245,7 +278,7 @@ class InMemoryTaskManagerTest {
         //Создадим подзадачу 2 и эпик 2 в статусе IN_PROGRESS
         SubTask subtask2 = createSubTask2();
         subtask2.setStatus(TaskStatus.IN_PROGRESS);
-       Epic epic2 = subtask2.getEpic();
+        Epic epic2 = subtask2.getEpic();
 
         // Подменим id Эпика 2 на эпик 1
         epic2.setId(epic1.getId());
@@ -282,7 +315,9 @@ class InMemoryTaskManagerTest {
         Epic epic1 = createEpic1();
         Epic foundEpic = taskManager.getEpic(epic1.getId());
 
-        assert epic1.equals(foundEpic);
+        assert epic1.equals(foundEpic) &&
+            historyManager.getHistory().contains(foundEpic); // Проверить историю просмотра
+
     }
 
     @Test

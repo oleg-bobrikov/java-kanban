@@ -1,5 +1,6 @@
 package ru.yandex.practicum.bobrikov.kanban.managers.taskmanager;
 
+import ru.yandex.practicum.bobrikov.kanban.managers.historymanager.HistoryManager;
 import ru.yandex.practicum.bobrikov.kanban.model.Epic;
 import ru.yandex.practicum.bobrikov.kanban.model.SubTask;
 import ru.yandex.practicum.bobrikov.kanban.model.Task;
@@ -46,6 +47,5 @@ public interface TaskManager {
     ArrayList<SubTask> getSubTasksByEpic(Epic epic);
     ArrayList<Task> getHistory();
 
-
-
+    HistoryManager getHistoryManager();
 }

@@ -16,6 +16,11 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
 
+    @Override
+    public HistoryManager getHistoryManager() {
+        return historyManager;
+    }
+
     private final HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
@@ -115,12 +120,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTasks() {
+        // Удалить историю просмотра
+        for(Task task: tasks.values()){
+            historyManager.remove(task);
+        }
+
         tasks.clear();
     }
 
     @Override
     public void deleteSubTasks() {
-        // Удаление только подзадач из эпиков.
+        // Удалить историю просмотра
+        for(SubTask subTask: subTasks.values()){
+            historyManager.remove(subTask);
+        }
+        // Удалить только подзадачи из эпиков.
         // Эпики должны сохраниться.
         for (Epic epic : epics.values()) {
             epic.getSubTasks().clear();
@@ -130,6 +144,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpics() {
+        // Удалить историю просмотра
+        for(SubTask subTask: subTasks.values()){
+            historyManager.remove(subTask);
+        }
+
+        for(Epic epic: epics.values()){
+            historyManager.remove(epic);
+        }
+
         subTasks.clear();
         epics.clear();
     }
@@ -162,9 +185,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTask(int id) {
-        tasks.remove(id);
         // Удаление задачи из истории просмотров
         historyManager.remove(tasks.get(id));
+        // Удаление задачи
+        tasks.remove(id);
     }
 
     @Override
@@ -195,6 +219,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic == null) {
             return;
         }
+        // Удаление подзадач из истории просмотра
+        for(SubTask subTask: epic.getSubTasks().values())
+        historyManager.remove(subTask);
+
         // Удаление эпика из истории просмотров
         historyManager.remove(epic);
 
