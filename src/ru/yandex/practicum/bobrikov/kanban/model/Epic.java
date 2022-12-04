@@ -10,9 +10,9 @@ public class Epic extends Task {
     public String toString() {
         String description = " ";
         if (!this.description.isEmpty()) {
-            description = " (" + this.description + "): ";
+            description = " (" + this.description + ")";
         }
-        return "Эпик: " + "id: " + this.id + " " + this.name + description + this.status;
+        return "Эпик: " + "id: " + this.id + " " + this.name + description + ", Статус: " + this.status;
     }
 
     public HashMap<Integer, SubTask> getSubTasks() {

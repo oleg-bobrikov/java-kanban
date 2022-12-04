@@ -13,7 +13,7 @@ public class Task {
     }
 
     public int getId() {
-           return id;
+        return id;
     }
 
     public void setId(Integer id) {
@@ -47,8 +47,8 @@ public class Task {
     public String toString() {
         String description = " ";
         if (!this.description.isEmpty()) {
-            description = " (" + this.description + "): ";
+            description = " (" + this.description + ")";
         }
-        return "Задача: " + "id: " + this.id + " " + this.name + description + this.status;
+        return "Задача: " + "id: " + this.id + " " + this.name + description + ", Статус: " + this.status;
     }
 }

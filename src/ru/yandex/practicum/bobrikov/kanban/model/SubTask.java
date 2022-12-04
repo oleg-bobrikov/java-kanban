@@ -11,9 +11,10 @@ public class SubTask extends Task {
     public String toString() {
         String description = " ";
         if (!this.description.isEmpty()) {
-            description = " (" + this.description + "): ";
+            description = " (" + this.description + "), Статус: ";
         }
-        return "Подзадача: " + "id: " + this.id + " " + this.name + description + this.status;
+        return "Подзадача: " + "id: " + this.id + " " + this.name + description + this.status + ", Эпик id:" +
+                this.epic.getId();
     }
 
     public void setEpic(Epic epic) {
