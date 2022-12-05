@@ -5,10 +5,7 @@ import ru.yandex.practicum.bobrikov.kanban.model.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    // Самая красивая и лаконичаня реалзиация
-        //private final LinkedHashSet<Task> taskHistory = new LinkedHashSet<>();
-
-    // Учебная реализация
+    // Учебная реализация вместо LinkedHashSet<Task>
     private final CustomLinkedList<Task> taskHistory = new CustomLinkedList<>();
 
     @Override
@@ -24,7 +21,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public ArrayList<Task> getHistory() {
-        //return new ArrayList<>(taskHistory);
         return taskHistory.getList();
     }
 }

@@ -1,7 +1,8 @@
-package ru.yandex.practicum.bobrikov.kanban.managers.taskmanager;
+package ru.yandex.practicum.bobrikov.kanban.unit.tests;
 
 import ru.yandex.practicum.bobrikov.kanban.managers.Managers;
 import ru.yandex.practicum.bobrikov.kanban.managers.historymanager.HistoryManager;
+import ru.yandex.practicum.bobrikov.kanban.managers.taskmanager.TaskManager;
 import ru.yandex.practicum.bobrikov.kanban.model.Epic;
 import ru.yandex.practicum.bobrikov.kanban.model.SubTask;
 import ru.yandex.practicum.bobrikov.kanban.model.Task;

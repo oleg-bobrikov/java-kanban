@@ -9,9 +9,10 @@ public class CustomLinkedList<T> {
 
     private final HashMap<T, Node<T>> linkedHashMap = new HashMap<>();
 
-    public int Size() {
+    public int size() {
         return linkedHashMap.size();
     }
+
     public boolean isEmpty() {
         return linkedHashMap.isEmpty();
     }
@@ -19,7 +20,7 @@ public class CustomLinkedList<T> {
     public void linkLast(T t) {
         Node<T> node = new Node<>(t);
         if (linkedHashMap.isEmpty()) {
-           this.head = node;
+            this.head = node;
         } else {
             this.tile.setNext(node);
             node.setPrevious(this.tile);
@@ -41,16 +42,16 @@ public class CustomLinkedList<T> {
 
     public boolean add(T t) {
 
-        boolean isPresent = remove(t);
+        boolean isNew = !remove(t);
 
         linkLast(t);
 
-        return !isPresent;
+        return isNew;
     }
 
     public boolean remove(T t) {
         Node<T> node = linkedHashMap.get(t);
-        boolean isPresent = false;
+        boolean hasRemoved = false;
         if (node != null) {
             Node<T> previous = node.getPrevious();
             Node<T> next = node.getNext();
@@ -60,20 +61,19 @@ public class CustomLinkedList<T> {
             } else if (node.equals(tile)) {
                 tile = previous;
                 previous.setNext(null);
-            } else if (node.equals( head)){
-               this.head = node.getNext();
-               next.setPrevious(null);
-            }
-            else {
+            } else if (node.equals(head)) {
+                this.head = node.getNext();
+                next.setPrevious(null);
+            } else {
                 previous.setNext(next);
                 next.setPrevious(previous);
             }
 
             linkedHashMap.remove(t);
-            isPresent = true;
+            hasRemoved = true;
         }
 
-        return isPresent;
+        return hasRemoved;
     }
 
 }

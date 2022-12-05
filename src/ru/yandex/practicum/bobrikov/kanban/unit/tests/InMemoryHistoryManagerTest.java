@@ -1,4 +1,4 @@
-package ru.yandex.practicum.bobrikov.kanban.managers.historymanager;
+package ru.yandex.practicum.bobrikov.kanban.unit.tests;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.bobrikov.kanban.managers.Managers;
