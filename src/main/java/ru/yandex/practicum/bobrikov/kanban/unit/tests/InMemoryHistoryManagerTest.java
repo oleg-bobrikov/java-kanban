@@ -1,6 +1,7 @@
 package ru.yandex.practicum.bobrikov.kanban.unit.tests;
 
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.bobrikov.kanban.exceptions.ManagerSaveException;
 import ru.yandex.practicum.bobrikov.kanban.managers.Managers;
 import ru.yandex.practicum.bobrikov.kanban.managers.taskmanager.TaskManager;
 import ru.yandex.practicum.bobrikov.kanban.model.Task;
@@ -11,7 +12,7 @@ class InMemoryHistoryManagerTest {
     TaskManager taskManager = Managers.getDefault();
 
     @Test
-    void add() {
+    void add() throws ManagerSaveException {
         taskManager.deleteTasks();
         Task task1 = createTask(1);
         Task task2 = createTask(2);
@@ -27,7 +28,7 @@ class InMemoryHistoryManagerTest {
         assert history.size() == 2 && history.get(0).getName().contains("Задача: 2");
     }
 
-    private Task createTask(int taskNumber) {
+    private Task createTask(int taskNumber) throws ManagerSaveException {
         Task newTask = new Task("Задача: " + taskNumber, "Описание задачи: " + taskNumber);
         taskManager.addTask(newTask);
         return newTask;

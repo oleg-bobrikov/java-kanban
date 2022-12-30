@@ -1,20 +1,23 @@
 package ru.yandex.practicum.bobrikov.kanban.managers.historymanager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
-public class CustomLinkedList<T> {
+public class CustomLinkedList<T> implements Serializable {
     private Node<T> head = null;
     private Node<T> tile = null;
 
     private final HashMap<T, Node<T>> linkedHashMap = new HashMap<>();
 
-    public int size() {
-        return linkedHashMap.size();
-    }
-
-    public boolean isEmpty() {
-        return linkedHashMap.isEmpty();
+    @Override
+    public String toString() {
+        return "CustomLinkedList{" +
+                "head=" + head +
+                ", tile=" + tile +
+                ", linkedHashMap=" + linkedHashMap +
+                '}';
     }
 
     public void linkLast(T t) {
@@ -76,4 +79,18 @@ public class CustomLinkedList<T> {
         return hasRemoved;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CustomLinkedList)) return false;
+        CustomLinkedList<?> that = (CustomLinkedList<?>) o;
+        return Objects.equals(head, that.head) &&
+                Objects.equals(tile, that.tile) &&
+                Objects.equals(linkedHashMap, that.linkedHashMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(head, tile, linkedHashMap);
+    }
 }

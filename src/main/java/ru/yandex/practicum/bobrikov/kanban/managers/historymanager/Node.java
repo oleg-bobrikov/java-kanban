@@ -31,16 +31,6 @@ class Node<T> {
         this.next = next;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Node<T> node = (Node<T>) o;
-        return this.previous == node.previous && this.value == node.value && this.next == node.next;
-    }
+
 }
 

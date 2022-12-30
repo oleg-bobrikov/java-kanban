@@ -1,5 +1,7 @@
 package ru.yandex.practicum.bobrikov.kanban.unit.tests;
 
+import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.bobrikov.kanban.exceptions.ManagerSaveException;
 import ru.yandex.practicum.bobrikov.kanban.managers.Managers;
 import ru.yandex.practicum.bobrikov.kanban.managers.historymanager.HistoryManager;
 import ru.yandex.practicum.bobrikov.kanban.managers.taskmanager.TaskManager;
@@ -7,7 +9,6 @@ import ru.yandex.practicum.bobrikov.kanban.model.Epic;
 import ru.yandex.practicum.bobrikov.kanban.model.SubTask;
 import ru.yandex.practicum.bobrikov.kanban.model.Task;
 import ru.yandex.practicum.bobrikov.kanban.model.TaskStatus;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -29,38 +30,38 @@ class InMemoryTaskManagerTest {
 
     private final HistoryManager historyManager = taskManager.getHistoryManager();
 
-    private Task createTask1() {
+    private Task createTask1() throws ManagerSaveException {
         Task newTask = new Task(TASK_NAME_1, TASK_DESCRIPTION_1);
         taskManager.addTask(newTask);
         return newTask;
     }
 
-    private Task createTask2() {
+    private Task createTask2() throws ManagerSaveException {
         Task newTask = new Task(TASK_NAME_2, TASK_DESCRIPTION_2);
         taskManager.addTask(newTask);
         return newTask;
     }
 
-    private Epic createEpic1() {
+    private Epic createEpic1() throws ManagerSaveException {
         Epic newEpic = new Epic(EPIC_NAME_1, EPIC_DESCRIPTION_1);
         taskManager.addEpic(newEpic);
         return newEpic;
     }
 
-    private Epic createEpic2() {
+    private Epic createEpic2() throws ManagerSaveException {
         Epic newEpic = new Epic(EPIC_NAME_2, EPIC_DESCRIPTION_2);
         taskManager.addEpic(newEpic);
         return newEpic;
     }
 
-    private SubTask createSubTask1() {
+    private SubTask createSubTask1() throws ManagerSaveException {
         Epic epic1 = createEpic1();
         SubTask newSubTask = new SubTask(SUBTASK_NAME_1, SUBTASK_DESCRIPTION_1, epic1);
         taskManager.addSubTask(newSubTask);
         return newSubTask;
     }
 
-    private SubTask createSubTask2() {
+    private SubTask createSubTask2() throws ManagerSaveException {
         Epic epic2 = createEpic2();
         SubTask newSubTask = new SubTask(SUBTASK_NAME_2, SUBTASK_DESCRIPTION_2, epic2);
         taskManager.addSubTask(newSubTask);
@@ -74,7 +75,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getTasks() {
+    void getTasks() throws ManagerSaveException {
         clearTaskManager();
         Task task = createTask1();
         // Создаь историю просмотра
@@ -85,7 +86,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void deleteTasks() {
+    void deleteTasks() throws ManagerSaveException {
         clearTaskManager();
         Task task1 = createTask1();
         Task task2 = createTask1();
@@ -103,7 +104,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addTask() {
+    void addTask() throws ManagerSaveException {
         clearTaskManager();
         createTask1();
         if (taskManager.getTasks().isEmpty()) {
@@ -118,7 +119,7 @@ class InMemoryTaskManagerTest {
 
 
     @Test
-    void updateTask() {
+    void updateTask() throws ManagerSaveException {
         clearTaskManager();
         createTask1();
         Task task1 = taskManager.getTask(1);
@@ -131,7 +132,7 @@ class InMemoryTaskManagerTest {
 
 
     @Test
-    void getTask() {
+    void getTask() throws ManagerSaveException {
         clearTaskManager();
         Task task = createTask1();
         Task foundTask = taskManager.getTask(1);
@@ -140,7 +141,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void deleteTask() {
+    void deleteTask() throws ManagerSaveException {
         clearTaskManager();
         Task task1 = createTask1();
         createTask2();
@@ -154,21 +155,21 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getSubTasks() {
+    void getSubTasks() throws ManagerSaveException {
         clearTaskManager();
         createSubTask1();
         assert taskManager.getSubTasks().size() == 1;
     }
 
     @Test
-    void addSubTask() {
+    void addSubTask() throws ManagerSaveException {
         clearTaskManager();
         createSubTask1();
         assert taskManager.getSubTasks().size() == 1;
     }
 
     @Test
-    void deleteSubTask() {
+    void deleteSubTask() throws ManagerSaveException {
         clearTaskManager();
         SubTask subTask = createSubTask1();
         Epic epic = subTask.getEpic();
@@ -185,7 +186,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void updateSubTask() {
+    void updateSubTask() throws ManagerSaveException {
         clearTaskManager();
         // Создание подзадачи вместе с эпиком
         SubTask oldSubTask = createSubTask1();
@@ -205,7 +206,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void deleteSubTasks() {
+    void deleteSubTasks() throws ManagerSaveException {
         SubTask subTask2 = createSubTask2();
 
         // Создать историю просмотра
@@ -221,7 +222,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getSubTask() {
+    void getSubTask() throws ManagerSaveException {
         clearTaskManager();
         SubTask subTask = createSubTask1();
         SubTask foundSubTask = taskManager.getSubTask(subTask.getId());
@@ -231,7 +232,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getEpics() {
+    void getEpics() throws ManagerSaveException {
         clearTaskManager();
         createEpic1();
         createEpic2();
@@ -240,7 +241,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addEpic() {
+    void addEpic() throws ManagerSaveException {
         clearTaskManager();
         taskManager.getEpics().clear();
         createEpic1();
@@ -249,7 +250,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void deleteEpic() {
+    void deleteEpic() throws ManagerSaveException {
         clearTaskManager();
         SubTask subTask = createSubTask1();
         Epic epic = subTask.getEpic();
@@ -267,7 +268,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void updateEpic() {
+    void updateEpic() throws ManagerSaveException {
         clearTaskManager();
 
         // Создадим подзадачу 1 вместе с эпиком 1 в статусе DONE
@@ -301,7 +302,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void deleteEpics() {
+    void deleteEpics() throws ManagerSaveException {
         clearTaskManager();
         createEpic1();
         createEpic2();
@@ -311,7 +312,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getEpic() {
+    void getEpic() throws ManagerSaveException {
         clearTaskManager();
         Epic epic1 = createEpic1();
         Epic foundEpic = taskManager.getEpic(epic1.getId());
@@ -322,7 +323,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getSubTasksByEpic() {
+    void getSubTasksByEpic() throws ManagerSaveException {
         clearTaskManager();
         SubTask subtask1 = createSubTask1();
         SubTask subTask2 = new SubTask(SUBTASK_NAME_2, SUBTASK_DESCRIPTION_2, subtask1.getEpic());

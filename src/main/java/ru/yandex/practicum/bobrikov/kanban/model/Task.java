@@ -1,6 +1,10 @@
 package ru.yandex.practicum.bobrikov.kanban.model;
 
-public class Task {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Task implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected Integer id; //Идентификатор задачи
     protected String name; //Название, кратко описывающее суть задачи (например, «Переезд»).
     protected String description; //Описание, в котором раскрываются детали.
@@ -10,6 +14,7 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = TaskStatus.NEW;
+        this.id = 0;
     }
 
     public int getId() {
@@ -44,11 +49,29 @@ public class Task {
         this.status = status;
     }
 
+    @Override
     public String toString() {
-        String description = " ";
-        if (!this.description.isEmpty()) {
-            description = " (" + this.description + ")";
-        }
-        return "Задача: " + "id: " + this.id + " " + this.name + description + ", Статус: " + this.status;
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        Task task = (Task) o;
+        return Objects.equals(getId(), task.getId()) &&
+                Objects.equals(getName(), task.getName()) &&
+                Objects.equals(getDescription(), task.getDescription()) &&
+                getStatus() == task.getStatus();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription(), getStatus());
     }
 }

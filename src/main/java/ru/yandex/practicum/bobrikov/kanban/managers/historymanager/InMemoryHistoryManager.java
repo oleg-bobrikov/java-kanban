@@ -2,11 +2,16 @@ package ru.yandex.practicum.bobrikov.kanban.managers.historymanager;
 
 import ru.yandex.practicum.bobrikov.kanban.model.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class InMemoryHistoryManager implements HistoryManager {
+    private static final long serialVersionUID = 2502696358512035861L;
     // Учебная реализация вместо LinkedHashSet<Task>
     private final CustomLinkedList<Task> taskHistory = new CustomLinkedList<>();
+
+    public InMemoryHistoryManager() {
+    }
 
     @Override
     public void add(Task task) {
@@ -22,5 +27,18 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public ArrayList<Task> getHistory() {
         return taskHistory.getList();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof InMemoryHistoryManager)) return false;
+        InMemoryHistoryManager that = (InMemoryHistoryManager) o;
+        return Objects.equals(taskHistory, that.taskHistory);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(taskHistory);
     }
 }
