@@ -14,47 +14,44 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
 
 
-    public FileBackedTaskManager(HistoryManager historyManager, File file) throws ManagerSaveException {
+    public FileBackedTaskManager(HistoryManager historyManager, File file)  {
         super(historyManager);
         this.file = file;
         loadFromFile();
     }
 
-    public void loadFromFile() throws ManagerSaveException {
-        if (file.exists()) {
-            try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(file.toPath()))) {
-                try {
-                    ArrayList<Task> tasks = (ArrayList<Task>) in.readObject();
-                    for (Task task : tasks) {
-                        super.addTask(task);
-                    }
-
-                    ArrayList<Epic> epics = (ArrayList<Epic>) in.readObject();
-                    for (Epic epic : epics) {
-                        super.addEpic(epic);
-                    }
-                    ArrayList<SubTask> subTasks = (ArrayList<SubTask>) in.readObject();
-                    for (SubTask subTask : subTasks) {
-                        super.addSubTask(subTask);
-                    }
-
-                    ArrayList<Task> taskHistory = (ArrayList<Task>) in.readObject();
-                    for (Task task : taskHistory) {
-                        super.getHistoryManager().add(task);
-                    }
-
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new ManagerSaveException(e.getMessage());
-                }
-
-            } catch (IOException e) {
-                throw new ManagerSaveException(e.getMessage());
-            }
-
+    private void loadFromFile() {
+        if (!file.exists()) {
+            return;
+        }
+        ArrayList<Task> tasks;
+        ArrayList<Epic> epics;
+        ArrayList<SubTask> subTasks;
+        ArrayList<Task> taskHistory;
+        try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(file.toPath()))) {
+            tasks = (ArrayList<Task>) in.readObject();
+            epics = (ArrayList<Epic>) in.readObject();
+            subTasks = (ArrayList<SubTask>) in.readObject();
+            taskHistory = (ArrayList<Task>) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new ManagerSaveException(e.getMessage());
+        }
+        for (Task task : tasks) {
+            super.addTask(task);
+        }
+        for (Epic epic : epics) {
+            super.addEpic(epic);
+        }
+        for (SubTask subTask : subTasks) {
+            super.addSubTask(subTask);
+        }
+        for (Task task : taskHistory) {
+            super.getHistoryManager().add(task);
         }
     }
 
-    private void save() throws ManagerSaveException {
+
+    private void save() {
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file))) {
             objectOutputStream.writeObject(getTasks());
             objectOutputStream.writeObject(getEpics());
@@ -66,88 +63,102 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task addTask(Task task) throws ManagerSaveException {
+    public Task addTask(Task task) {
         Task newTask = super.addTask(task);
         save();
         return newTask;
     }
 
     @Override
-    public Task getTask(int taskId) throws ManagerSaveException {
+    public Task getTask(int taskId) {
         Task newTask = super.getTask(taskId);
         save();
         return newTask;
     }
 
     @Override
-    public SubTask addSubTask(SubTask subTask) throws ManagerSaveException {
+    public SubTask addSubTask(SubTask subTask) {
         SubTask newSubTask = super.addSubTask(subTask);
         save();
         return newSubTask;
     }
 
     @Override
-    public Epic addEpic(Epic epic) throws ManagerSaveException {
+    public Epic addEpic(Epic epic) {
         Epic newEpic = super.addEpic(epic);
         save();
         return newEpic;
     }
 
     @Override
-    public void deleteTasks() throws ManagerSaveException {
+    public void deleteTasks() {
         super.deleteTasks();
         save();
     }
 
     @Override
-    public void deleteSubTasks() throws ManagerSaveException {
+    public void deleteSubTasks() {
         super.deleteSubTasks();
         save();
     }
 
     @Override
-    public void deleteEpics() throws ManagerSaveException {
+    public void deleteEpics() {
         super.deleteEpics();
         save();
     }
 
     @Override
-    public void deleteTask(int id) throws ManagerSaveException {
+    public void deleteTask(int id) {
         super.deleteTask(id);
         save();
     }
 
     @Override
-    public boolean deleteSubTask(int id) throws ManagerSaveException {
+    public boolean deleteSubTask(int id) {
         boolean hasRemoved = super.deleteSubTask(id);
         save();
         return hasRemoved;
     }
 
     @Override
-    public void deleteEpic(int id) throws ManagerSaveException {
+    public void deleteEpic(int id) {
         super.deleteEpic(id);
         save();
     }
 
     @Override
-    public Task updateTask(Task task) throws ManagerSaveException {
+    public Task updateTask(Task task) {
         Task newTask = super.updateTask(task);
         save();
         return newTask;
     }
 
     @Override
-    public SubTask updateSubTask(SubTask newSubTask) throws ManagerSaveException {
+    public SubTask updateSubTask(SubTask newSubTask) {
         SubTask updatedSubTask = super.updateSubTask(newSubTask);
         save();
         return updatedSubTask;
     }
 
     @Override
-    public Epic updateEpic(Epic newEpic) throws ManagerSaveException {
+    public Epic updateEpic(Epic newEpic) {
         Epic updatedEpic = super.updateEpic(newEpic);
         save();
         return updatedEpic;
+    }
+
+    @Override
+    public Epic getEpic(int epicId) {
+        Epic epic = super.getEpic(epicId);
+        save();
+        return epic;
+    }
+
+    @Override
+    public SubTask getSubTask(int subTaskId) {
+        SubTask subTask = super.getSubTask(subTaskId);
+        save();
+        return subTask;
     }
 }

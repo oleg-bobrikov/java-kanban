@@ -1,6 +1,5 @@
 package ru.yandex.practicum.bobrikov.kanban.managers.taskmanager;
 
-import ru.yandex.practicum.bobrikov.kanban.exceptions.ManagerSaveException;
 import ru.yandex.practicum.bobrikov.kanban.managers.historymanager.HistoryManager;
 import ru.yandex.practicum.bobrikov.kanban.model.Epic;
 import ru.yandex.practicum.bobrikov.kanban.model.SubTask;
@@ -15,35 +14,35 @@ public interface TaskManager {
 
     ArrayList<Epic> getEpics();
 
-    Task addTask(Task task) throws ManagerSaveException;
+    Task addTask(Task task);
 
-    SubTask addSubTask(SubTask subTask) throws ManagerSaveException;
+    SubTask addSubTask(SubTask subTask);
 
-    Epic addEpic(Epic epic) throws ManagerSaveException;
+    Epic addEpic(Epic epic) ;
 
-    void deleteTasks() throws ManagerSaveException;
+    void deleteTasks() ;
 
-    void deleteSubTasks() throws ManagerSaveException;
+    void deleteSubTasks();
 
-    void deleteEpics() throws ManagerSaveException;
+    void deleteEpics() ;
 
-    Task getTask(int taskId) throws ManagerSaveException;
+    Task getTask(int taskId) ;
 
     Epic getEpic(int epicId) ;
 
     SubTask getSubTask(int subTaskId) ;
 
-    void deleteTask(int id) throws ManagerSaveException;
+    void deleteTask(int id) ;
 
-    boolean deleteSubTask(int id) throws ManagerSaveException;
+    boolean deleteSubTask(int id) ;
 
-    void deleteEpic(int id) throws ManagerSaveException;
+    void deleteEpic(int id) ;
 
-    Task updateTask(Task task) throws ManagerSaveException;
+    Task updateTask(Task task) ;
 
-    SubTask updateSubTask(SubTask newSubTask) throws ManagerSaveException;
+    SubTask updateSubTask(SubTask newSubTask) ;
 
-    Epic updateEpic(Epic newEpic) throws ManagerSaveException;
+    Epic updateEpic(Epic newEpic) ;
 
     ArrayList<SubTask> getSubTasksByEpic(Epic epic);
     ArrayList<Task> getHistory();

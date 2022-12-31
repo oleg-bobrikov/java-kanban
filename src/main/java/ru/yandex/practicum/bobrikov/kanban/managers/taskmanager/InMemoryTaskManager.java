@@ -1,6 +1,6 @@
 package ru.yandex.practicum.bobrikov.kanban.managers.taskmanager;
 
-import ru.yandex.practicum.bobrikov.kanban.exceptions.ManagerSaveException;
+
 import ru.yandex.practicum.bobrikov.kanban.managers.historymanager.HistoryManager;
 
 import ru.yandex.practicum.bobrikov.kanban.model.Epic;
@@ -48,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public Task addTask(Task task) throws ManagerSaveException {
+    public Task addTask(Task task) {
 
         // восстановить Id
         if (task.getId() == 0) {
@@ -63,7 +63,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public SubTask addSubTask(SubTask subTask) throws ManagerSaveException {
+    public SubTask addSubTask(SubTask subTask) {
         // Проверка на существоание эпика
         if (subTask == null || subTask.getEpic() == null) {
             return null;
@@ -121,7 +121,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public Epic addEpic(Epic epic) throws ManagerSaveException {
+    public Epic addEpic(Epic epic) {
         //Обновить Id
         if (epic.getId() == 0) {
             epic.setId(++lastAssignedId);
@@ -137,7 +137,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public void deleteTasks() throws ManagerSaveException {
+    public void deleteTasks()  {
         // Удалить историю просмотра
         for (Task task : tasks.values()) {
             historyManager.remove(task);
@@ -147,7 +147,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public void deleteSubTasks() throws ManagerSaveException {
+    public void deleteSubTasks()  {
         // Удалить историю просмотра
         for (SubTask subTask : subTasks.values()) {
             historyManager.remove(subTask);
@@ -161,7 +161,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public void deleteEpics() throws ManagerSaveException {
+    public void deleteEpics()  {
         // Удалить историю просмотра
         for (SubTask subTask : subTasks.values()) {
             historyManager.remove(subTask);
@@ -176,7 +176,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public Task getTask(int taskId) throws ManagerSaveException {
+    public Task getTask(int taskId)  {
         Task task = tasks.get(taskId);
         historyManager.add(task);
         return task;
@@ -202,7 +202,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public void deleteTask(int id) throws ManagerSaveException {
+    public void deleteTask(int id)  {
         // Удаление задачи из истории просмотров
         historyManager.remove(tasks.get(id));
         // Удаление задачи
@@ -210,7 +210,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public boolean deleteSubTask(int id) throws ManagerSaveException {
+    public boolean deleteSubTask(int id)  {
         // Проверка существования подзадачи
         SubTask subTask = subTasks.get(id);
         if (subTask == null) {
@@ -231,7 +231,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public void deleteEpic(int id) throws ManagerSaveException {
+    public void deleteEpic(int id)  {
         // Проверка существования эпика
         Epic epic = epics.get(id);
         if (epic == null) {
@@ -256,7 +256,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public Task updateTask(Task task) throws ManagerSaveException {
+    public Task updateTask(Task task)  {
         // Проверка на существование задачи
         Task taskToUpdate = tasks.get(task.getId());
         if (taskToUpdate == null) {
@@ -269,7 +269,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public SubTask updateSubTask(SubTask newSubTask) throws ManagerSaveException {
+    public SubTask updateSubTask(SubTask newSubTask)  {
 
         // проверка на существование подзадачи
         SubTask oldSubTask = subTasks.get(newSubTask.getId());
@@ -304,7 +304,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public Epic updateEpic(Epic newEpic) throws ManagerSaveException {
+    public Epic updateEpic(Epic newEpic)  {
         // проверка на существование эпика
         Epic oldEpic = epics.get(newEpic.getId());
         if (oldEpic == null) {

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.bobrikov.kanban.unit.tests;
+package ru.yandex.practicum.bobrikov.kanban;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.bobrikov.kanban.exceptions.ManagerSaveException;
