@@ -1,7 +1,6 @@
 package ru.yandex.practicum.bobrikov.kanban;
 
 import org.junit.jupiter.api.Test;
-
 import ru.yandex.practicum.bobrikov.kanban.managers.Managers;
 import ru.yandex.practicum.bobrikov.kanban.managers.taskmanager.TaskManager;
 import ru.yandex.practicum.bobrikov.kanban.model.Task;
