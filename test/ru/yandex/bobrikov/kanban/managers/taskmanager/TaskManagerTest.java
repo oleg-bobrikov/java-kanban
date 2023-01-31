@@ -40,13 +40,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void updateSubtask_should_change_epic_status_to_new_when_subtask_list_is_empty() {
+    public void updateSubtask_changeEpicStatusToNew_SubtaskListIsEmpty() {
         Epic epic1 = addEpic1();
         assertEquals(TaskStatus.NEW, epic1.getStatus());
     }
 
     @Test
-    public void updateSubtask_should_change_epic_status_to_new_when_all_subtasks_are_new() {
+    public void updateSubtask_changeEpicStatusToNew_AllSubtasksAreNew() {
         Epic epic1 = addEpic1();
 
         Subtask subTask1 = addSubTask1(epic1);
@@ -59,7 +59,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void updateSubtask_should_change_epic_status_to_done_when_all_subtasks_are_done() {
+    public void updateSubtask_changeEpicStatusToDone_AllSubtasksAreDone() {
         Epic epic1 = addEpic1();
 
         Subtask subTask1 = addSubTask1(epic1);
@@ -74,7 +74,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void updateSubtask_should_change_epic_status_to_in_progress_when_subtasks_are_new_and_done() {
+    public void updateSubtask_changeEpicStatusToInProgress_SubtasksAreNewAndDone() {
         Epic epic1 = addEpic1();
 
         Subtask subTask1 = addSubTask1(epic1);
@@ -89,7 +89,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void updateSubtask_should_change_epic_status_to_in_progress_when_any_subtask_is_in_progress() {
+    public void updateSubtask_changeEpicStatusToInProgress_AnySubtaskAreInProgress() {
         Epic epic1 = addEpic1();
 
         Subtask subTask1 = addSubTask1(epic1);
@@ -112,7 +112,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void addTask_task_should_be_added_to_the_task_manager() {
+    void addTask_addedTaskToTheTaskManager() {
         Task task = new Task(TASK_NAME_1, TASK_DESCRIPTION_1);
 
         final int taskId = taskManager.addTask(task).getId();
