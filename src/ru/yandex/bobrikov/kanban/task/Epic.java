@@ -1,4 +1,4 @@
-package ru.yandex.bobrikov.kanban.model;
+package ru.yandex.bobrikov.kanban.task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

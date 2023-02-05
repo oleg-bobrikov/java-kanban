@@ -1,11 +1,13 @@
-package ru.yandex.bobrikov.kanban.managers.taskmanager;
+package ru.yandex.bobrikov.kanban.manager.file;
 
-import ru.yandex.bobrikov.kanban.exceptions.ManagerSaveException;
-import ru.yandex.bobrikov.kanban.managers.Managers;
-import ru.yandex.bobrikov.kanban.managers.historymanager.HistoryManager;
-import ru.yandex.bobrikov.kanban.model.Epic;
-import ru.yandex.bobrikov.kanban.model.Subtask;
-import ru.yandex.bobrikov.kanban.model.Task;
+import ru.yandex.bobrikov.kanban.manager.exception.ManagerSaveException;
+import ru.yandex.bobrikov.kanban.manager.Managers;
+import ru.yandex.bobrikov.kanban.manager.HistoryManager;
+import ru.yandex.bobrikov.kanban.manager.memory.InMemoryTaskManager;
+import ru.yandex.bobrikov.kanban.manager.TaskManager;
+import ru.yandex.bobrikov.kanban.task.Epic;
+import ru.yandex.bobrikov.kanban.task.Subtask;
+import ru.yandex.bobrikov.kanban.task.Task;
 
 import java.io.*;
 import java.nio.file.Files;

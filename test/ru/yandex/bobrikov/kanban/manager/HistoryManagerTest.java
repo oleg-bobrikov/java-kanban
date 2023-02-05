@@ -1,9 +1,8 @@
-package ru.yandex.bobrikov.kanban.managers.historymanager;
+package ru.yandex.bobrikov.kanban.manager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.bobrikov.kanban.managers.Managers;
-import ru.yandex.bobrikov.kanban.model.Task;
+import ru.yandex.bobrikov.kanban.task.Task;
 
 import static org.junit.jupiter.api.Assertions.*;
 

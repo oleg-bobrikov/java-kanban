@@ -1,10 +1,10 @@
 package ru.yandex.bobrikov.kanban;
 
-import ru.yandex.bobrikov.kanban.managers.Managers;
-import ru.yandex.bobrikov.kanban.managers.taskmanager.TaskManager;
-import ru.yandex.bobrikov.kanban.model.Epic;
-import ru.yandex.bobrikov.kanban.model.Subtask;
-import ru.yandex.bobrikov.kanban.model.Task;
+import ru.yandex.bobrikov.kanban.manager.Managers;
+import ru.yandex.bobrikov.kanban.manager.TaskManager;
+import ru.yandex.bobrikov.kanban.task.Epic;
+import ru.yandex.bobrikov.kanban.task.Subtask;
+import ru.yandex.bobrikov.kanban.task.Task;
 
 public class Main {
     public static void main(String[] args) {

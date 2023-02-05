@@ -1,4 +1,4 @@
-package ru.yandex.bobrikov.kanban;
+package ru.yandex.bobrikov.kanban.manager.memory.history;
 
 import java.io.Serializable;
 import java.util.ArrayList;

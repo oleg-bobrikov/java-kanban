@@ -1,4 +1,4 @@
-package ru.yandex.bobrikov.kanban;
+package ru.yandex.bobrikov.kanban.manager.memory.history;
 
 class Node<T> {
     private final T value;

@@ -1,9 +1,8 @@
-package ru.yandex.bobrikov.kanban.managers;
+package ru.yandex.bobrikov.kanban.manager;
 
-import ru.yandex.bobrikov.kanban.managers.taskmanager.FileBackedTaskManager;
-import ru.yandex.bobrikov.kanban.managers.historymanager.HistoryManager;
-import ru.yandex.bobrikov.kanban.managers.historymanager.InMemoryHistoryManager;
-import ru.yandex.bobrikov.kanban.managers.taskmanager.InMemoryTaskManager;
+import ru.yandex.bobrikov.kanban.manager.file.FileBackedTaskManager;
+import ru.yandex.bobrikov.kanban.manager.memory.history.InMemoryHistoryManager;
+import ru.yandex.bobrikov.kanban.manager.memory.InMemoryTaskManager;
 
 import java.io.File;
 

@@ -1,7 +1,7 @@
-package ru.yandex.bobrikov.kanban.managers.historymanager;
+package ru.yandex.bobrikov.kanban.manager.memory.history;
 
-import ru.yandex.bobrikov.kanban.CustomLinkedList;
-import ru.yandex.bobrikov.kanban.model.Task;
+import ru.yandex.bobrikov.kanban.manager.HistoryManager;
+import ru.yandex.bobrikov.kanban.task.Task;
 
 import java.util.ArrayList;
 import java.util.Objects;

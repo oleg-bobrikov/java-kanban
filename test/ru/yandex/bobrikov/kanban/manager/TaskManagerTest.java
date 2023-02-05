@@ -1,13 +1,13 @@
-package ru.yandex.bobrikov.kanban.managers.taskmanager;
+package ru.yandex.bobrikov.kanban.manager;
 
-import ru.yandex.bobrikov.kanban.exceptions.ManagerSaveException;
-import ru.yandex.bobrikov.kanban.exceptions.PeriodIntersectionException;
+import ru.yandex.bobrikov.kanban.manager.exception.ManagerSaveException;
+import ru.yandex.bobrikov.kanban.manager.exception.PeriodIntersectionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.bobrikov.kanban.model.Epic;
-import ru.yandex.bobrikov.kanban.model.Subtask;
-import ru.yandex.bobrikov.kanban.model.Task;
-import ru.yandex.bobrikov.kanban.model.TaskStatus;
+import ru.yandex.bobrikov.kanban.task.Epic;
+import ru.yandex.bobrikov.kanban.task.Subtask;
+import ru.yandex.bobrikov.kanban.task.Task;
+import ru.yandex.bobrikov.kanban.task.TaskStatus;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -384,33 +384,33 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
 
-    Task addTask1() {
+    protected Task addTask1() {
         Task newTask = new Task(TASK_NAME_1, TASK_DESCRIPTION_1);
         taskManager.addTask(newTask);
         return newTask;
     }
 
-    Task addTask2() {
+    protected Task addTask2() {
         Task newTask = new Task(TASK_NAME_2, TASK_DESCRIPTION_2);
         taskManager.addTask(newTask);
         return newTask;
     }
 
 
-    Epic addEpic1() {
+    protected Epic addEpic1() {
         Epic newEpic = new Epic(EPIC_NAME_1, EPIC_DESCRIPTION_1);
         taskManager.addEpic(newEpic);
         return newEpic;
     }
 
-    Epic addEpic2() {
+    protected Epic addEpic2() {
         Epic newEpic = new Epic(EPIC_NAME_2, EPIC_DESCRIPTION_2);
         taskManager.addEpic(newEpic);
         return newEpic;
     }
 
 
-    Subtask addSubTask1(Epic epic) {
+    protected Subtask addSubTask1(Epic epic) {
         String SUBTASK_NAME_1 = "ПодЗадача1";
         String SUBTASK_DESCRIPTION_1 = "Описание подзадачи 1";
         Subtask newSubtask = new Subtask(SUBTASK_NAME_1, SUBTASK_DESCRIPTION_1, epic);
@@ -418,7 +418,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         return newSubtask;
     }
 
-    Subtask addSubTask2(Epic epic) {
+    protected Subtask addSubTask2(Epic epic) {
         Subtask newSubtask = new Subtask(SUBTASK_NAME_2, SUBTASK_DESCRIPTION_2, epic);
         taskManager.addSubtask(newSubtask);
         return newSubtask;
@@ -468,7 +468,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         //Проверка на неверный идентификатор подзадачи
         newSubtask.setId(1000);
         assertNull(taskManager.updateSubTask(newSubtask));
-
 
     }
 
