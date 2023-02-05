@@ -7,6 +7,12 @@ import java.util.Objects;
 
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    protected TaskType taskType;
     protected Integer id; // Идентификатор задачи
     protected String name; // Название, кратко описывающее суть задачи (например, «Переезд»).
     protected String description; // Описание, в котором раскрываются детали.
@@ -41,6 +47,7 @@ public class Task implements Serializable {
         this.status = TaskStatus.NEW;
         this.id = 0;
         this.duration = Duration.ofMinutes(0);
+        this.taskType = TaskType.TASK;
     }
 
     public int getId() {

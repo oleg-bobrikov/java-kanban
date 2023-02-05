@@ -6,6 +6,7 @@ import ru.yandex.bobrikov.kanban.task.Epic;
 import ru.yandex.bobrikov.kanban.task.Subtask;
 import ru.yandex.bobrikov.kanban.task.Task;
 import ru.yandex.bobrikov.kanban.manager.HistoryManager;
+import ru.yandex.bobrikov.kanban.task.TaskType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -144,7 +145,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
             historyManager.remove(task);
         }
         // Удалить отсортированные задачи
-        tasksByStartTime.removeIf(Task.class::isInstance);
+        tasksByStartTime.removeIf(task -> task.getTaskType() == TaskType.TASK);
 
         tasks.clear();
     }
@@ -162,7 +163,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
             epic.getSubTasks().clear();
         }
         // Удалить отсортированные задачи
-        tasksByStartTime.removeIf(Subtask.class::isInstance);
+        tasksByStartTime.removeIf(subtask -> subtask.getTaskType() == TaskType.SUBTASK);
 
         subtasks.clear();
     }
@@ -178,7 +179,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
             historyManager.remove(epic);
         }
         // Удалить отсортированные задачи
-        tasksByStartTime.removeIf(Subtask.class::isInstance);
+        tasksByStartTime.removeIf(subtask -> subtask.getTaskType() == TaskType.SUBTASK);
         subtasks.clear();
 
         epics.clear();
