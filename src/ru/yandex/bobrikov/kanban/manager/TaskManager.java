@@ -28,9 +28,13 @@ public interface TaskManager {
 
     Task getTask(int taskId);
 
+    Task getTaskWithoutUpdatingHistory(int taskId);
+
     Epic getEpic(int epicId);
 
+    Epic getEpicWithoutUpdatingHistory(int epicId);
     Subtask getSubtask(int subTaskId);
+    Subtask getSubtaskWithoutUpdatingHistory(int subTaskId);
 
     ArrayList<Task> getPrioritizedTasks();
 

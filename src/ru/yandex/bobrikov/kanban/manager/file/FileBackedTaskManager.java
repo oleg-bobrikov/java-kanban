@@ -16,15 +16,17 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private final transient File file;
+    protected final transient File file;
+    protected boolean isFileBackedTaskManager;
 
     public FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
         this.file = file;
+        this.isFileBackedTaskManager = true;
         loadFromFile();
     }
 
-    private void loadFromFile() {
+    protected void loadFromFile() {
         if (!file.exists()) {
             return;
         }
@@ -55,7 +57,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-    private void save() {
+    protected void save() {
+        if (!isFileBackedTaskManager) {
+            return;
+        }
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file))) {
             objectOutputStream.writeObject(getTasks());
             objectOutputStream.writeObject(getEpics());
@@ -76,6 +81,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public Task getTask(int taskId) {
         Task newTask = super.getTask(taskId);
+        if (newTask == null) {
+            return null;
+        }
         save();
         return newTask;
     }
@@ -134,13 +142,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public Task updateTask(Task task) {
         Task newTask = super.updateTask(task);
+        if (newTask == null) {
+            return null;
+        }
         save();
         return newTask;
     }
 
     @Override
     public Subtask updateSubTask(Subtask srcSubtask) {
+
         Subtask updatedSubtask = super.updateSubTask(srcSubtask);
+        if(updatedSubtask ==null){
+            return null;
+        }
         save();
         return updatedSubtask;
     }
@@ -148,6 +163,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public Epic updateEpic(Epic srcEpic) {
         Epic updatedEpic = super.updateEpic(srcEpic);
+        if (updatedEpic == null) {
+            return null;
+        }
         save();
         return updatedEpic;
     }

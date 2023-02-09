@@ -4,38 +4,40 @@ import ru.yandex.bobrikov.kanban.manager.HistoryManager;
 import ru.yandex.bobrikov.kanban.task.Task;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Objects;
+import java.util.TreeSet;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private static final long serialVersionUID = 2502696358512035861L;
-    // Учебная реализация вместо LinkedHashSet<Task>
-    private final CustomLinkedList<Task> taskHistory = new CustomLinkedList<>();
+
+    private final LinkedHashMap<Integer, Task> taskHistory = new LinkedHashMap<>();
 
     public InMemoryHistoryManager() {
     }
 
     @Override
     public void add(Task task) {
-        taskHistory.remove(task);
-        taskHistory.add(task);
+        taskHistory.remove(task.getId());
+        taskHistory.put(task.getId(), task);
     }
 
     @Override
     public void remove(Task task) {
-        taskHistory.remove(task);
+        taskHistory.remove(task.getId());
     }
 
     @Override
     public ArrayList<Task> getHistory() {
-        return taskHistory.getList();
+        return new ArrayList<Task>(taskHistory.values());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof InMemoryHistoryManager)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         InMemoryHistoryManager that = (InMemoryHistoryManager) o;
-        return Objects.equals(taskHistory, that.taskHistory);
+        return taskHistory.equals(that.taskHistory);
     }
 
     @Override

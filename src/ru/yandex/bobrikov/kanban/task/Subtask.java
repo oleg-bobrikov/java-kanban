@@ -18,13 +18,14 @@ public class Subtask extends Task {
     public Subtask(String name, String description, Epic epic) {
         super(name, description);
         this.epic = epic;
-        this.taskType = TaskType.SUBTASK;
+        this.type = TaskType.SUBTASK;
     }
 
     @Override
     public String toString() {
         return "Subtask{" +
                 "epic=" + epic.getId() +
+                ", type=" + type +
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
@@ -34,13 +35,14 @@ public class Subtask extends Task {
                 '}';
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Subtask subtask = (Subtask) o;
-        return Objects.equals(epic, subtask.epic);
+        return epic.equals(subtask.epic);
     }
 
     @Override

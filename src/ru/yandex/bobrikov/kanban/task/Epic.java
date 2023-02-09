@@ -2,6 +2,7 @@ package ru.yandex.bobrikov.kanban.task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
@@ -9,22 +10,21 @@ import java.util.Optional;
 public class Epic extends Task {
     private static final long serialVersionUID = 6103314303393686356L;
 
-    private final HashMap<Integer, Subtask> subTasks = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
 
-    public HashMap<Integer, Subtask> getSubTasks() {
-        return subTasks;
+    public  HashMap<Integer, Subtask> getSubtasks() {
+        return subtasks;
     }
 
     public Epic(String name, String description) {
         super(name, description);
-        this.taskType = TaskType.EPIC;
+        this.type = TaskType.EPIC;
     }
-
     public void updateStatus() {
         boolean isInProgress = false;
         boolean hasDone = false;
         boolean isNew = false;
-        for (Subtask subTask : subTasks.values()) {
+        for (Subtask subTask : subtasks.values()) {
             if (subTask.getStatus() == TaskStatus.IN_PROGRESS) {
                 isInProgress = true;
                 break;
@@ -46,7 +46,7 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getStartTime() {
-        Optional<LocalDateTime> min = subTasks.values().stream()
+        Optional<LocalDateTime> min = subtasks.values().stream()
                 .map(Task::getStartTime)
                 .filter(Objects::nonNull)
                 .min(LocalDateTime::compareTo);
@@ -56,7 +56,7 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getEndTime() {
-        Optional<LocalDateTime> max = subTasks.values().stream()
+        Optional<LocalDateTime> max = subtasks.values().stream()
                 .map(subtask -> {
                             if (subtask.getStartTime() == null) {
                                 return null;
@@ -92,7 +92,8 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Epic{" +
-                "subTasks=" + subTasks +
+                "subtasks=" + subtasks.keySet() +
+                ", type=" + type +
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
@@ -102,5 +103,17 @@ public class Epic extends Task {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Epic epic = (Epic) o;
+        return Arrays.equals(subtasks.keySet().toArray(), epic.subtasks.keySet().toArray());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subtasks.keySet());
+    }
 }

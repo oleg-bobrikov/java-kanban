@@ -2,10 +2,12 @@ package ru.yandex.bobrikov.kanban.manager.memory.history;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.function.Predicate;
 
-public class CustomLinkedList<T> implements Serializable {
+public class CustomLinkedList<T> implements Serializable{
     private Node<T> head = null;
     private Node<T> tile = null;
 
@@ -52,7 +54,7 @@ public class CustomLinkedList<T> implements Serializable {
         return isNew;
     }
 
-    public boolean remove(T t) {
+      public boolean remove(T t) {
         Node<T> node = linkedHashMap.get(t);
         boolean hasRemoved = false;
         if (node != null) {
@@ -79,7 +81,7 @@ public class CustomLinkedList<T> implements Serializable {
         return hasRemoved;
     }
 
-    public void clear() {
+      public void clear() {
         linkedHashMap.clear();
         head = null;
         tile = null;

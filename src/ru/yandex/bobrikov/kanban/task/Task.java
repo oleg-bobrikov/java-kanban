@@ -5,14 +5,14 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Task implements Serializable {
+public class Task implements Serializable,Comparable {
     private static final long serialVersionUID = 1L;
 
-    public TaskType getTaskType() {
-        return taskType;
+    public TaskType getType() {
+        return type;
     }
 
-    protected TaskType taskType;
+    protected TaskType type;
     protected Integer id; // Идентификатор задачи
     protected String name; // Название, кратко описывающее суть задачи (например, «Переезд»).
     protected String description; // Описание, в котором раскрываются детали.
@@ -47,7 +47,7 @@ public class Task implements Serializable {
         this.status = TaskStatus.NEW;
         this.id = 0;
         this.duration = Duration.ofMinutes(0);
-        this.taskType = TaskType.TASK;
+        this.type = TaskType.TASK;
     }
 
     public int getId() {
@@ -82,11 +82,11 @@ public class Task implements Serializable {
         this.status = status;
     }
 
-
     @Override
     public String toString() {
         return "Task{" +
-                "id=" + id +
+                "type=" + type +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status=" + status +
@@ -95,25 +95,30 @@ public class Task implements Serializable {
                 '}';
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return duration == task.duration
+        return type == task.type
                 && Objects.equals(id, task.id)
                 && Objects.equals(name, task.name)
                 && Objects.equals(description, task.description)
                 && status == task.status
-                && Objects.equals(startTime, task.startTime);
+                && Objects.equals(startTime, task.startTime)
+                && Objects.equals(duration, task.duration);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, status, startTime, duration);
+        return Objects.hash(type, id, name, description, status, startTime, duration);
     }
 
-
+    @Override
+    public int compareTo(Object o) {
+        if (this == o) return 0;
+        if (o == null || getClass() != o.getClass()) return -1;
+        return this.id- ((Task) o).getId();
+    }
 }
 

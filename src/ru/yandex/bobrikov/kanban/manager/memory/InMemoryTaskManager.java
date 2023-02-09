@@ -1,5 +1,6 @@
 package ru.yandex.bobrikov.kanban.manager.memory;
 
+
 import ru.yandex.bobrikov.kanban.manager.exception.PeriodIntersectionException;
 import ru.yandex.bobrikov.kanban.manager.TaskManager;
 import ru.yandex.bobrikov.kanban.task.Epic;
@@ -14,19 +15,21 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager, Serializable {
     private static final long serialVersionUID = 5L;
-    private int lastAssignedId; //Последний назначенный идентификатор задачи, подзадачи, эпика
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private final TreeSet<Task> tasksByStartTime = new TreeSet<>(Comparator.comparing(task ->
+    protected int lastAssignedId; //Последний назначенный идентификатор задачи, подзадачи, эпика
+
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+
+    protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected final transient TreeSet<Task> tasksByStartTime = new TreeSet<>(Comparator.comparing(task ->
             task.getStartTime() == null ? LocalDateTime.MAX : task.getStartTime()));
+    protected final transient HistoryManager historyManager;
 
     @Override
     public HistoryManager getHistoryManager() {
         return historyManager;
     }
-
-    private final HistoryManager historyManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.lastAssignedId = 0;
@@ -48,7 +51,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
         return new ArrayList<>(epics.values());
     }
 
-    private boolean hasPeriodIntersection(Task task) {
+    protected boolean hasPeriodIntersection(Task task) {
         if (task.getStartTime() == null) {
             return false;
         }
@@ -110,7 +113,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
         subtasks.put(subtask.getId(), subtask);
 
         // Добавление подзадачи в эпик
-        epic.getSubTasks().put(subtask.getId(), subtask);
+        epic.getSubtasks().put(subtask.getId(), subtask);
 
         // Обновление статуса эпика
         epic.updateStatus();
@@ -145,7 +148,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
             historyManager.remove(task);
         }
         // Удалить отсортированные задачи
-        tasksByStartTime.removeIf(task -> task.getTaskType() == TaskType.TASK);
+        tasksByStartTime.removeIf(task -> task.getType() == TaskType.TASK);
 
         tasks.clear();
     }
@@ -160,26 +163,28 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
         // Удалить только подзадачи из эпиков.
         // Эпики должны сохраниться.
         for (Epic epic : epics.values()) {
-            epic.getSubTasks().clear();
+            epic.getSubtasks().clear();
         }
         // Удалить отсортированные задачи
-        tasksByStartTime.removeIf(subtask -> subtask.getTaskType() == TaskType.SUBTASK);
+        tasksByStartTime.removeIf(subtask -> subtask.getType() == TaskType.SUBTASK);
 
         subtasks.clear();
     }
 
     @Override
     public void deleteEpics() {
-        // Удалить историю просмотра
+        // Удалить историю просмотра эпиков
+        for (Epic epic : epics.values()) {
+            historyManager.remove(epic);
+        }
+
+        // Удалить историю просмотра подзадач
         for (Subtask subTask : subtasks.values()) {
             historyManager.remove(subTask);
         }
 
-        for (Epic epic : epics.values()) {
-            historyManager.remove(epic);
-        }
         // Удалить отсортированные задачи
-        tasksByStartTime.removeIf(subtask -> subtask.getTaskType() == TaskType.SUBTASK);
+        tasksByStartTime.removeIf(subtask -> subtask.getType() == TaskType.SUBTASK);
         subtasks.clear();
 
         epics.clear();
@@ -188,8 +193,17 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     @Override
     public Task getTask(int taskId) {
         Task task = tasks.get(taskId);
-        historyManager.add(task);
+        if (task != null) {
+            historyManager.add(task);
+        } else {
+            return null;
+        }
         return task;
+    }
+
+    @Override
+    public Task getTaskWithoutUpdatingHistory(int taskId) {
+        return tasks.get(taskId);
     }
 
     @Override
@@ -200,15 +214,30 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     @Override
     public Epic getEpic(int epicId) {
         Epic epic = epics.get(epicId);
-        historyManager.add(epic);
+        if (epic != null) {
+            historyManager.add(epic);
+        }
+
         return epic;
+    }
+
+    @Override
+    public Epic getEpicWithoutUpdatingHistory(int epicId) {
+
+        return epics.get(epicId);
     }
 
     @Override
     public Subtask getSubtask(int subTaskId) {
         Subtask subTask = subtasks.get(subTaskId);
-        historyManager.add(subTask);
+        if (subTask != null) {
+            historyManager.add(subTask);
+        }
         return subTask;
+    }
+
+    public Subtask getSubtaskWithoutUpdatingHistory(int subTaskId) {
+        return subtasks.get(subTaskId);
     }
 
     @Override
@@ -244,7 +273,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
 
         // Удаление подзадачи из эпика
         Epic epic = subtask.getEpic();
-        epic.getSubTasks().remove(id);
+        epic.getSubtasks().remove(id);
         epic.updateStatus();
 
         //Удаление подзадачи
@@ -264,14 +293,14 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
             return;
         }
         // Удаление подзадач из истории просмотра
-        for (Subtask subTask : epic.getSubTasks().values())
+        for (Subtask subTask : epic.getSubtasks().values())
             historyManager.remove(subTask);
 
         // Удаление эпика из истории просмотров
         historyManager.remove(epic);
 
         // Удаление подзадач
-        for (Integer subTaskId : epic.getSubTasks().keySet()) {
+        for (Integer subTaskId : epic.getSubtasks().keySet()) {
             Subtask subtask = subtasks.get(subTaskId);
             // Удаление подзадачи из истории просмотров
             historyManager.remove(subtask);
@@ -329,7 +358,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
         // Удалить подзадачу из эпика, если она ему уже не принадлежит
         Epic srcEpic = srcSubtask.getEpic();
         if (!dstSubtask.getEpic().equals(srcEpic)) {
-            srcEpic.getSubTasks().remove(subtaskId);
+            srcEpic.getSubtasks().remove(subtaskId);
 
             // Обновить старый эпик
             srcEpic.updateStatus();
@@ -344,7 +373,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
         dstSubtask.setEpic(dstEpic);
 
         // обновить эпик подзадачи
-        dstEpic.getSubTasks().put(subtaskId, dstSubtask);
+        dstEpic.getSubtasks().put(subtaskId, dstSubtask);
         dstEpic.updateStatus();
 
         // удалить задачу из отсортированного спика
@@ -370,23 +399,23 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
         }
 
         // проверить существоание переданных подзадач в менеджере задач
-        for (Subtask subTask : srcEpic.getSubTasks().values()) {
+        for (Subtask subTask : srcEpic.getSubtasks().values()) {
             if (subtasks.get(subTask.getId()) == null) {
                 return null;
             }
         }
 
         // удалить из менеджера подзадачи, которые есть в эпике для обновления, но нет в источнике
-        epicToUpdate.getSubTasks().keySet().stream()
-                .filter(subtaskId -> !srcEpic.getSubTasks().containsKey(subtaskId))
+        epicToUpdate.getSubtasks().keySet().stream()
+                .filter(subtaskId -> !srcEpic.getSubtasks().containsKey(subtaskId))
                 .forEach(subtaskId -> {
-                    srcEpic.getSubTasks().remove(subtaskId);
+                    srcEpic.getSubtasks().remove(subtaskId);
                     subtasks.remove(subtaskId);
                 });
 
         // добавить или обновить подзадачи
-        srcEpic.getSubTasks().keySet()
-                .forEach(id -> epicToUpdate.getSubTasks().put(id, subtasks.get(id)));
+        srcEpic.getSubtasks().keySet()
+                .forEach(id -> epicToUpdate.getSubtasks().put(id, subtasks.get(id)));
 
         // Обновление полей
         epicToUpdate.setName(srcEpic.getName());
@@ -397,7 +426,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
 
     @Override
     public ArrayList<Subtask> getSubtasksByEpic(Epic epic) {
-        return new ArrayList<>(epic.getSubTasks().values());
+        return new ArrayList<>(epic.getSubtasks().values());
     }
 
     @Override

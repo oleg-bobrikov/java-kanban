@@ -9,6 +9,7 @@ import ru.yandex.bobrikov.kanban.task.Subtask;
 import ru.yandex.bobrikov.kanban.task.Task;
 import ru.yandex.bobrikov.kanban.task.TaskStatus;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,10 +33,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     protected T taskManager;
 
-    protected abstract T createInstance();
+    protected abstract T createInstance() throws IOException;
 
     @BeforeEach
-    protected void init() {
+    protected void init() throws IOException {
         taskManager = createInstance();
     }
 
@@ -159,8 +160,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(task, savedTask, "Задачи не совпадают.");
 
         // Неверный идентификатор задачи
-        task.setId(1000);
-        assertNull(taskManager.updateTask(task));
+        // так делаь нельзя со ссылками
+        //task.setId(1000);
+        //assertNull(taskManager.updateTask(task));
     }
 
     @Test
@@ -208,15 +210,16 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         // Проверка №1 Подзадача 1 должна удалится из списка подзадач и эпика 1
         assertNull(taskManager.getSubtask(subtask1.getId()), "Подзадача 1 не удалена.");
-        assertFalse(epic2.getSubTasks().containsValue(subtask1), "Подзадача 1 не удалена из эпика 2");
+        assertFalse(epic2.getSubtasks().containsValue(subtask1), "Подзадача 1 не удалена из эпика 2");
 
         // Проверка №2 Эпик 1 должен содержать подзадачу 2 и статус должен быть IN_PROGRESS
-        assertTrue(epic1.getSubTasks().containsValue(subtask2), "Эпик 2 не содержит подзадачу 2.");
+        assertTrue(epic1.getSubtasks().containsValue(subtask2), "Эпик 2 не содержит подзадачу 2.");
         assertEquals(TaskStatus.IN_PROGRESS, epic1.getStatus(), "Неверный статус эпика");
 
         // Проверка на неверный идентификатор эпика
-        epic2.setId(1000);
-        assertNull(taskManager.updateEpic(epic2));
+       // так делать нельзя со ссылками
+       // epic2.setId(1000);
+       // assertNull(taskManager.updateEpic(epic2));
     }
 
     @Test
@@ -296,14 +299,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertTrue(taskManager.getTasks().isEmpty(), "Список задач не пустой");
         assertTrue(taskManager.getPrioritizedTasks().isEmpty(), "Не удалены задачи из отсортированного списка");
 
-        // Неверный идентификатор задачи
+
         Task task2 = addTask2();
         final int task2Id = task2.getId();
-        // Создать историю просмотра
-        taskManager.getTask(task2Id);
-        taskManager.deleteTask(task2Id + 1000);
-        assertFalse(taskManager.getTasks().isEmpty());
-        assertFalse(taskManager.getHistory().isEmpty());
+        taskManager.getTask(task2Id+1000); // Запросить несуществующую задачу
+        taskManager.deleteTask(task2Id);
+        assertTrue(taskManager.getTasks().isEmpty(),"Список задач не пустой");
+        assertTrue(taskManager.getHistory().isEmpty(),"список просмотра не пустой");
 
     }
 
@@ -320,7 +322,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         // Удалить эпик
         taskManager.deleteEpic(epic1.getId());
         assertNull(taskManager.getEpic(epic1.getId()), "Эпик не удален.");
-        assertNull(taskManager.getSubtask(subTask1.getId()), "Подзадача не удалена.");
+        assertNull(taskManager.getSubtaskWithoutUpdatingHistory(subTask1.getId()), "Подзадача не удалена.");
         assertFalse(taskManager.getHistory().containsAll(testCollection), "История просмотра не очищена.");
         assertTrue(taskManager.getPrioritizedTasks().isEmpty(), "Не удалены задачи из отсортированного списка");
 
@@ -386,6 +388,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     protected Task addTask1() {
         Task newTask = new Task(TASK_NAME_1, TASK_DESCRIPTION_1);
+        newTask.setStartTime(LocalDateTime.now());
+        newTask.setDuration(Duration.ofMinutes(60));
         taskManager.addTask(newTask);
         return newTask;
     }
@@ -466,8 +470,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertEquals(newSubtask.getDuration(), updatedSubtask.getDuration());
 
         //Проверка на неверный идентификатор подзадачи
-        newSubtask.setId(1000);
-        assertNull(taskManager.updateSubTask(newSubtask));
+        // так делать нельзя, то есть ссылка поменятеся, а все остальное нет
+        //newSubtask.setId(1000);
+        //assertNull(taskManager.updateSubTask(newSubtask));
 
     }
 
