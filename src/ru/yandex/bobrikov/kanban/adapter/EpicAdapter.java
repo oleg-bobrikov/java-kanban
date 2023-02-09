@@ -6,10 +6,8 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import ru.yandex.bobrikov.kanban.manager.TaskManager;
 import ru.yandex.bobrikov.kanban.manager.server.HttpTaskManager;
 import ru.yandex.bobrikov.kanban.task.Epic;
-import ru.yandex.bobrikov.kanban.task.Subtask;
 import ru.yandex.bobrikov.kanban.task.TaskStatus;
 
 import java.io.IOException;
@@ -17,10 +15,8 @@ import java.lang.reflect.Type;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+
 
 public class EpicAdapter extends TypeAdapter<Epic> {
     private final HttpTaskManager taskManager;
@@ -123,7 +119,7 @@ public class EpicAdapter extends TypeAdapter<Epic> {
         epic.setDuration(duration);
 
         subtasks.stream()
-                .map(subTaskId -> taskManager.getSubtaskWithoutUpdatingHistory(subTaskId))
+                .map(taskManager::getSubtaskWithoutUpdatingHistory)
                 .forEach(subtask -> epic.getSubtasks().put(subtask.getId(), subtask));
 
         return epic;

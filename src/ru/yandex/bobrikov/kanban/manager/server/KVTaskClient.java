@@ -14,11 +14,10 @@ public class KVTaskClient {
 
     private final String API_TOKEN;
     private final InetSocketAddress address;
-    private final HttpClient client;
 
     public KVTaskClient(InetSocketAddress address) throws KVTaskClientException {
         this.address = address;
-        this.client = HttpClient.newHttpClient();
+        HttpClient client = HttpClient.newHttpClient();
         URI uri = URI.create(String.format("http://%s:%d/register",
                 address.getHostString(),
                 address.getPort()));

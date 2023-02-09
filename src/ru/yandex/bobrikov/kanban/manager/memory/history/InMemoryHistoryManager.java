@@ -6,7 +6,6 @@ import ru.yandex.bobrikov.kanban.task.Task;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Objects;
-import java.util.TreeSet;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private static final long serialVersionUID = 2502696358512035861L;
@@ -29,7 +28,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public ArrayList<Task> getHistory() {
-        return new ArrayList<Task>(taskHistory.values());
+        return new ArrayList<>(taskHistory.values());
     }
 
     @Override

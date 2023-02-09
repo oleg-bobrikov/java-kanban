@@ -8,7 +8,6 @@ import ru.yandex.bobrikov.kanban.manager.TaskManager;
 import ru.yandex.bobrikov.kanban.task.Epic;
 import ru.yandex.bobrikov.kanban.task.Subtask;
 import ru.yandex.bobrikov.kanban.task.TaskStatus;
-import ru.yandex.bobrikov.kanban.task.TaskType;
 
 import java.io.IOException;
 import java.time.Duration;

@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Task implements Serializable,Comparable {
+public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public TaskType getType() {
@@ -114,11 +114,5 @@ public class Task implements Serializable,Comparable {
         return Objects.hash(type, id, name, description, status, startTime, duration);
     }
 
-    @Override
-    public int compareTo(Object o) {
-        if (this == o) return 0;
-        if (o == null || getClass() != o.getClass()) return -1;
-        return this.id- ((Task) o).getId();
-    }
 }
 

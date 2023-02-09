@@ -75,9 +75,6 @@ public class HttpTaskManager extends FileBackedTaskManager {
         server.createContext("/tasks", HttpTaskManager.this::handleTasks);
         server.createContext("/tasks/subtask", HttpTaskManager.this::handleSubtasks);
         server.createContext("/tasks/epic", HttpTaskManager.this::handleEpics);
-
-        // Запустить сервер
-        server.start();
     }
 
     private void handleTasks(HttpExchange httpExchange) {
@@ -404,7 +401,7 @@ public class HttpTaskManager extends FileBackedTaskManager {
 
     @Override
     protected void save() {
-          HashMap<String, String> structure = new HashMap<>();
+        HashMap<String, String> structure = new HashMap<>();
         structure.put("tasks", gson.toJson(tasks.values().toArray()));
         structure.put("subtasks", gson.toJson(subtasks.values().toArray()));
         structure.put("epics", gson.toJson(epics.values().toArray()));

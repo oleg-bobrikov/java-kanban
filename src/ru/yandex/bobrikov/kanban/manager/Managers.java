@@ -20,10 +20,6 @@ import java.time.LocalDateTime;
 
 
 public class Managers {
-    public static KVServer getKvServer() {
-        return kvServer;
-    }
-
     public static HttpTaskManager httpTaskManager;
     private static KVServer kvServer;
     private static final File taskManagerFile = new File("taskManager.txt");
@@ -39,7 +35,12 @@ public class Managers {
             kvServer.start();
         }
         httpTaskManager = new HttpTaskManager(kvServer.getAddress(), taskManagerFile, 8080);
+        httpTaskManager.start();
         return httpTaskManager;
+    }
+
+    public static KVServer getKVServer() {
+        return kvServer;
     }
 
     public static HistoryManager getDefaultHistory() {

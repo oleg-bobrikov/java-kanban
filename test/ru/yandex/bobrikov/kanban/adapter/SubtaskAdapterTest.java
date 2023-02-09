@@ -3,7 +3,6 @@ package ru.yandex.bobrikov.kanban.adapter;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import ru.yandex.bobrikov.kanban.manager.Managers;
-import ru.yandex.bobrikov.kanban.manager.TaskManager;
 import ru.yandex.bobrikov.kanban.manager.server.HttpTaskManager;
 import ru.yandex.bobrikov.kanban.task.Epic;
 import ru.yandex.bobrikov.kanban.task.Subtask;
