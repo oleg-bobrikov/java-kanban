@@ -32,7 +32,7 @@ public class SubtaskHandler extends BaseHandler {
                             String queryId = query.replaceFirst("id=", "");
                             int id = parsePathId(queryId);
                             if (id != -1) {
-                                Subtask subtask = taskManager.getSubtaskWithoutUpdatingHistory(id);
+                                Subtask subtask = taskManager.getSubtask(id);
                                 if (subtask != null) {
                                     String response = gson.toJson(subtask);
                                     sendText(exchange, response);
@@ -55,9 +55,8 @@ public class SubtaskHandler extends BaseHandler {
                         if (jsonElement.isJsonObject()) {
                             Subtask subtask = gson.fromJson(body, Subtask.class);
                             int subtaskId = subtask.getId();
-                            Subtask newSubtask;
-                            if (taskManager.getSubtaskWithoutUpdatingHistory(subtaskId) != null) {
-                                newSubtask = taskManager.updateSubTask(subtask);
+                            Subtask newSubtask = taskManager.updateSubTask(subtask);
+                            if (newSubtask != null) {
                                 System.out.println("Обновлена подзадача с идентификатором: " + subtaskId);
                             } else {
                                 newSubtask = taskManager.addSubtask(subtask);

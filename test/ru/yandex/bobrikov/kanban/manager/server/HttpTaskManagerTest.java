@@ -8,7 +8,7 @@ import java.io.IOException;
 class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
     @Override
     protected HttpTaskManager createInstance() throws IOException {
-        return Managers.getDefault();
+        return (HttpTaskManager) Managers.getDefault();
     }
 }
 

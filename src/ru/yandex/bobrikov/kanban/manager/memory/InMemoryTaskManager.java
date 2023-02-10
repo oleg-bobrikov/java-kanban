@@ -201,10 +201,6 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
         return task;
     }
 
-    @Override
-    public Task getTaskWithoutUpdatingHistory(int taskId) {
-        return tasks.get(taskId);
-    }
 
     @Override
     public ArrayList<Task> getHistory() {
@@ -222,22 +218,12 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public Epic getEpicWithoutUpdatingHistory(int epicId) {
-
-        return epics.get(epicId);
-    }
-
-    @Override
     public Subtask getSubtask(int subTaskId) {
         Subtask subTask = subtasks.get(subTaskId);
         if (subTask != null) {
             historyManager.add(subTask);
         }
         return subTask;
-    }
-
-    public Subtask getSubtaskWithoutUpdatingHistory(int subTaskId) {
-        return subtasks.get(subTaskId);
     }
 
     @Override

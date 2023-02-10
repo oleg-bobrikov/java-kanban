@@ -31,7 +31,7 @@ public class TaskHandler extends BaseHandler {
                             String queryId = query.replaceFirst("id=", "");
                             int id = parsePathId(queryId);
                             if (id != -1) {
-                                Task task = taskManager.getTaskWithoutUpdatingHistory(id);
+                                Task task = taskManager.getTask(id);
                                 if (task != null) {
                                     String response = gson.toJson(task);
                                     sendText(exchange, response);
@@ -48,15 +48,14 @@ public class TaskHandler extends BaseHandler {
                     break;
                 }
                 case "POST": {
-                    if (query==null && path.equals("/tasks/task/")) {
+                    if (query == null && path.equals("/tasks/task/")) {
                         String body = readText(exchange);
                         JsonElement jsonElement = JsonParser.parseString(body);
                         if (jsonElement.isJsonObject()) {
                             Task task = gson.fromJson(body, Task.class);
                             int taskId = task.getId();
-                            Task newTask;
-                            if (taskManager.getTaskWithoutUpdatingHistory(taskId) != null) {
-                                newTask = taskManager.updateTask(task);
+                            Task newTask = taskManager.updateTask(task);
+                            if (newTask != null) {
                                 System.out.println("Обновлена задача с идентификатором: " + taskId);
                             } else {
                                 newTask = taskManager.addTask(task);

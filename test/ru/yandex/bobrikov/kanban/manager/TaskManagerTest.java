@@ -315,7 +315,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         // Удалить эпик
         taskManager.deleteEpic(epic1.getId());
         assertNull(taskManager.getEpic(epic1.getId()), "Эпик не удален.");
-        assertNull(taskManager.getSubtaskWithoutUpdatingHistory(subTask1.getId()), "Подзадача не удалена.");
+        assertFalse(taskManager.getSubtasks().contains(subTask1), "Подзадача не удалена.");
         assertFalse(taskManager.getHistory().containsAll(testCollection), "История просмотра не очищена.");
         assertTrue(taskManager.getPrioritizedTasks().isEmpty(), "Не удалены задачи из отсортированного списка");
 

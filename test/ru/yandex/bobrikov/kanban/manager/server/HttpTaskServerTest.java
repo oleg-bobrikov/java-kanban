@@ -1,8 +1,13 @@
 package ru.yandex.bobrikov.kanban.manager.server;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.*;
+import ru.yandex.bobrikov.kanban.adapter.DurationAdapter;
+import ru.yandex.bobrikov.kanban.adapter.EpicAdapter;
+import ru.yandex.bobrikov.kanban.adapter.LocalDateTimeAdapter;
+import ru.yandex.bobrikov.kanban.adapter.SubtaskAdapter;
 import ru.yandex.bobrikov.kanban.manager.Managers;
 import ru.yandex.bobrikov.kanban.manager.TaskManager;
 import ru.yandex.bobrikov.kanban.task.Epic;
@@ -37,7 +42,12 @@ class HttpTaskServerTest {
         taskManager.deleteEpics();
         taskManager.deleteTasks();
 
-        gson = Managers.getGson(taskManager);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
+        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
+        gsonBuilder.registerTypeAdapter(Subtask.class, new SubtaskAdapter(taskManager));
+        gsonBuilder.registerTypeAdapter(Epic.class, new EpicAdapter(taskManager));
+        gson = gsonBuilder.create();
 
     }
 
@@ -327,8 +337,7 @@ class HttpTaskServerTest {
         assertEquals(200, response.statusCode());
         assertEquals(1, taskManager.getEpics().size(), "эпик не добавлен");
 
-        int epicId = gson.fromJson(response.body(), Epic.class).getId();
-        Epic addedEpic = taskManager.getEpic(epicId);
+        Epic addedEpic = gson.fromJson(response.body(), Epic.class);
 
         assertEquals(epic.getName(), addedEpic.getName());
         assertEquals(epic.getDescription(), addedEpic.getDescription());
@@ -344,7 +353,7 @@ class HttpTaskServerTest {
                 .build();
         response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         assertEquals(200, response.statusCode());
-        int addedEpicTwiceId = gson.fromJson(response.body(), Subtask.class).getId();
+        int addedEpicTwiceId = gson.fromJson(response.body(), Epic.class).getId();
         Epic addedEpicTwice = taskManager.getEpic(addedEpicTwiceId);
         assertEquals(addedEpic, addedEpicTwice, "не выполнено условие идемпонетности");
     }

@@ -1,6 +1,7 @@
 package ru.yandex.bobrikov.kanban.manager.server;
 
 import com.sun.net.httpserver.HttpServer;
+import ru.yandex.bobrikov.kanban.manager.TaskManager;
 import ru.yandex.bobrikov.kanban.manager.server.handler.*;
 
 import java.io.IOException;
@@ -9,9 +10,9 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
     private final int PORT = 8080;
     private final HttpServer server;
-    private final HttpTaskManager taskManager;
+    private final TaskManager taskManager;
 
-    public HttpTaskServer(HttpTaskManager taskManager) throws IOException {
+    public HttpTaskServer(TaskManager taskManager) throws IOException {
 
         this.taskManager = taskManager;
 
@@ -30,15 +31,16 @@ public class HttpTaskServer {
 
         server.start();
     }
-    public HttpTaskManager getTaskManager() {
+
+    public TaskManager getTaskManager() {
         return taskManager;
     }
 
     public void start() {
         System.out.println("Server has been started at http://localhost:" + PORT + "/tasks/");
-        try{
+        try {
             server.start();
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             System.out.println("Server has already been started at http://localhost:" + PORT + "/tasks/");
         }
 

@@ -32,7 +32,7 @@ public class EpicHandler extends BaseHandler {
                             String queryId = query.replaceFirst("id=", "");
                             int id = parsePathId(queryId);
                             if (id != -1) {
-                                Epic epic = taskManager.getEpicWithoutUpdatingHistory(id);
+                                Epic epic = taskManager.getEpic(id);
                                 if (epic != null) {
                                     String response = gson.toJson(epic);
                                     sendText(exchange, response);
@@ -55,13 +55,13 @@ public class EpicHandler extends BaseHandler {
                         if (jsonElement.isJsonObject()) {
                             Epic epic = gson.fromJson(body, Epic.class);
                             int epicId = epic.getId();
-                            Epic newEpic;
-                            if (taskManager.getEpicWithoutUpdatingHistory(epicId) != null) {
-                                newEpic = taskManager.updateEpic(epic);
-                                System.out.println("Обновлен эпик с идентификатором: " + epicId);
-                            } else {
+
+                            Epic newEpic = taskManager.updateEpic(epic);
+                            if (newEpic == null) {
                                 newEpic = taskManager.addEpic(epic);
                                 System.out.println("Создан эпик с идентификатором: " + newEpic.getId());
+                            } else {
+                                System.out.println("Обновлен эпик с идентификатором: " + epicId);
                             }
                             String response = gson.toJson(newEpic);
                             sendText(exchange, response);
@@ -72,6 +72,7 @@ public class EpicHandler extends BaseHandler {
                     exchange.sendResponseHeaders(405, 0);
                     break;
                 }
+
                 case "DELETE": {
                     if (path.equals("/tasks/epic/")) {
                         if (query == null) {

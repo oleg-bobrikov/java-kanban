@@ -61,7 +61,8 @@ public class SubtaskAdapter extends TypeAdapter<Subtask> {
             switch (in.nextName()) {
                 case "epicId":
                     int epicId = in.nextInt();
-                    epic = taskManager.getEpicWithoutUpdatingHistory(epicId);
+                    epic = new Epic("", "");
+                    epic.setId(epicId);
                     break;
                 case "status":
                     switch (in.nextString()) {
@@ -108,7 +109,10 @@ public class SubtaskAdapter extends TypeAdapter<Subtask> {
         subtask.setStatus(status);
         subtask.setStartTime(startTime);
         subtask.setDuration(duration);
-
-        return subtask;
+        Subtask newSubtask = taskManager.updateSubTask(subtask);
+        if (newSubtask == null) {
+            newSubtask = taskManager.addSubtask(subtask);
+        }
+        return newSubtask;
     }
 }

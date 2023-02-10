@@ -1,9 +1,10 @@
 package ru.yandex.bobrikov.kanban.adapter;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
 import ru.yandex.bobrikov.kanban.manager.Managers;
-import ru.yandex.bobrikov.kanban.manager.server.HttpTaskManager;
+import ru.yandex.bobrikov.kanban.manager.TaskManager;
 import ru.yandex.bobrikov.kanban.task.Epic;
 import ru.yandex.bobrikov.kanban.task.Subtask;
 
@@ -16,11 +17,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class SubtaskAdapterTest {
     @Test
     void check_serialization() throws IOException {
-        HttpTaskManager taskManager = Managers.getDefault();
+        TaskManager taskManager = Managers.getDefault();
         taskManager.deleteEpics();
         taskManager.deleteTasks();
 
-        Gson gson = Managers.getGson(taskManager);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter());
+        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
+        gsonBuilder.registerTypeAdapter(Subtask.class, new SubtaskAdapter(taskManager));
+        gsonBuilder.registerTypeAdapter(Epic.class, new EpicAdapter(taskManager));
+        Gson gson = gsonBuilder.create();
 
         Epic epic1 = new Epic("Epic1 name", "Epic 1 desc");
         taskManager.addEpic(epic1);

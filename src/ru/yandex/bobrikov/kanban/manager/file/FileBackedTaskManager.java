@@ -16,18 +16,22 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    protected final transient File file;
-    protected boolean isFileBackedTaskManager;
+    protected transient File file;
+
 
     public FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
         this.file = file;
-        this.isFileBackedTaskManager = true;
-        this.load();
+        this.loadFromFile();
     }
 
-    protected void load() {
-        if (!file.exists()) {
+    public FileBackedTaskManager(HistoryManager historyManager) {
+        super(historyManager);
+        this.loadFromFile();
+    }
+
+    private void loadFromFile() {
+        if (file == null || !file.exists()) {
             return;
         }
         ArrayList<Task> tasks;
@@ -58,9 +62,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
 
     protected void save() {
-        if (!isFileBackedTaskManager) {
-            return;
-        }
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file))) {
             objectOutputStream.writeObject(getTasks());
             objectOutputStream.writeObject(getEpics());
@@ -153,7 +154,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public Subtask updateSubTask(Subtask srcSubtask) {
 
         Subtask updatedSubtask = super.updateSubTask(srcSubtask);
-        if(updatedSubtask ==null){
+        if (updatedSubtask == null) {
             return null;
         }
         save();
