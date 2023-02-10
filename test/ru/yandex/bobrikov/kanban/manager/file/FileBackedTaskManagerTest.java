@@ -64,7 +64,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
         assertArrayEquals(taskViewHistory.toArray(), newTaskManager.getHistory().toArray(),
                 "Отличается история просмотра задач.");
-        assertEquals((InMemoryTaskManager) taskManager, (InMemoryTaskManager) newTaskManager,
+        assertEquals(taskManager, newTaskManager,
                 "Менежеры задач не совпадают.");
 
         //Проверить сохранение/восстановление при пустом списке задач
@@ -76,7 +76,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
             throw new ManagerSaveException(e.getMessage());
         }
         newTaskManager = Managers.getFileBackedTaskManager(newTaskManagerFile);
-        assertEquals((InMemoryTaskManager) taskManager, (InMemoryTaskManager) newTaskManager,
+        assertEquals(taskManager, newTaskManager,
                 "Менежеры задач не совпадают.");
 
         //Проверить сохранение/восстановление при наличии эпика без подзадач
@@ -91,7 +91,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
             throw new ManagerSaveException(e.getMessage());
         }
         newTaskManager = Managers.getFileBackedTaskManager(newTaskManagerFile);
-        assertEquals((InMemoryTaskManager) taskManager, (InMemoryTaskManager) newTaskManager,
+        assertEquals(taskManager, newTaskManager,
                 "Менежеры задач не совпадают.");
 
         //Проверить сохранение/восстановление при пустом списке истории просмотра задач.
@@ -106,7 +106,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
             throw new ManagerSaveException(e.getMessage());
         }
         newTaskManager = Managers.getFileBackedTaskManager(newTaskManagerFile);
-        assertEquals((InMemoryTaskManager) taskManager, (InMemoryTaskManager) newTaskManager,
+        assertEquals(taskManager, newTaskManager,
                 "Менежеры задач не совпадают.");
     }
 }

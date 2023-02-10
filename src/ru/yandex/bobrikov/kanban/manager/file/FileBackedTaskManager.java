@@ -23,10 +23,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super(historyManager);
         this.file = file;
         this.isFileBackedTaskManager = true;
-        loadFromFile();
+        this.load();
     }
 
-    protected void loadFromFile() {
+    protected void load() {
         if (!file.exists()) {
             return;
         }

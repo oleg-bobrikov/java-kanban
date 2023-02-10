@@ -9,6 +9,7 @@ import ru.yandex.bobrikov.kanban.adapter.SubtaskAdapter;
 import ru.yandex.bobrikov.kanban.manager.file.FileBackedTaskManager;
 import ru.yandex.bobrikov.kanban.manager.memory.history.InMemoryHistoryManager;
 import ru.yandex.bobrikov.kanban.manager.server.HttpTaskManager;
+import ru.yandex.bobrikov.kanban.manager.server.HttpTaskServer;
 import ru.yandex.bobrikov.kanban.manager.server.KVServer;
 import ru.yandex.bobrikov.kanban.task.Epic;
 import ru.yandex.bobrikov.kanban.task.Subtask;
@@ -20,11 +21,12 @@ import java.time.LocalDateTime;
 
 
 public class Managers {
-    public static HttpTaskManager httpTaskManager;
+    private static HttpTaskManager httpTaskManager;
     private static KVServer kvServer;
     private static final File taskManagerFile = new File("taskManager.txt");
     private static Gson gson;
     private static Gson simpleGson;
+    private static HttpTaskServer httpTaskServer;
 
     public static HttpTaskManager getDefault() throws IOException {
         if (httpTaskManager != null) {
@@ -34,13 +36,17 @@ public class Managers {
             kvServer = new KVServer();
             kvServer.start();
         }
-        httpTaskManager = new HttpTaskManager(kvServer.getAddress(), taskManagerFile, 8080);
-        httpTaskManager.start();
+        httpTaskManager = new HttpTaskManager(taskManagerFile);
         return httpTaskManager;
     }
+    public static HttpTaskServer getDefaultHttpTaskServer() throws IOException {
+        if (httpTaskServer != null) {
+            return httpTaskServer;
+        }
 
-    public static KVServer getKVServer() {
-        return kvServer;
+        httpTaskServer = new HttpTaskServer(getDefault());
+        httpTaskServer.start();
+        return httpTaskServer;
     }
 
     public static HistoryManager getDefaultHistory() {
@@ -51,7 +57,7 @@ public class Managers {
         return new FileBackedTaskManager(getDefaultHistory(), file);
     }
 
-    public static Gson getGson(HttpTaskManager taskManager) {
+    public static Gson getGson(TaskManager taskManager) {
         if (gson != null) {
             return gson;
         }
@@ -74,5 +80,7 @@ public class Managers {
         simpleGson = gsonBuilder.create();
         return simpleGson;
     }
+
+
 }
 

@@ -11,7 +11,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 /**
- * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
+ * Постман: <a href="https://www.getpostman.com/collections/a83b61d9e1c81c10575c">...</a>
  */
 public class KVServer {
     public static final int PORT = 8078;
@@ -60,10 +60,6 @@ public class KVServer {
         } finally {
             h.close();
         }
-    }
-
-    public InetSocketAddress getAddress() {
-        return server.getAddress();
     }
 
     private void save(HttpExchange h) throws IOException {
@@ -120,6 +116,7 @@ public class KVServer {
         System.out.println("API_TOKEN: " + apiToken);
         server.start();
     }
+
     public void stop() {
         System.out.println("Останавливаем сервер на порту " + PORT);
         System.out.println("API_TOKEN: " + apiToken);

@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-import ru.yandex.bobrikov.kanban.manager.server.HttpTaskManager;
+import ru.yandex.bobrikov.kanban.manager.TaskManager;
 import ru.yandex.bobrikov.kanban.task.Epic;
 import ru.yandex.bobrikov.kanban.task.TaskStatus;
 
@@ -19,10 +19,10 @@ import java.util.Set;
 
 
 public class EpicAdapter extends TypeAdapter<Epic> {
-    private final HttpTaskManager taskManager;
+    private final TaskManager taskManager;
     private final Gson gson;
 
-    public EpicAdapter(HttpTaskManager taskManager) {
+    public EpicAdapter(TaskManager taskManager) {
         this.taskManager = taskManager;
         this.gson = new Gson();
     }
