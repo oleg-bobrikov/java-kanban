@@ -34,11 +34,11 @@ public interface TaskManager {
 
     ArrayList<Task> getPrioritizedTasks();
 
-    void deleteTask(int id);
+    boolean deleteTask(int id);
 
     boolean deleteSubTask(int id);
 
-    void deleteEpic(int id);
+    boolean deleteEpic(int id);
 
     Task updateTask(Task task);
 

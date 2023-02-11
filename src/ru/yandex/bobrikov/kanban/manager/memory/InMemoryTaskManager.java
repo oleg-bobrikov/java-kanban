@@ -232,12 +232,13 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public void deleteTask(int id) {
-        // Удаление задачи из истории просмотров
+    public boolean deleteTask(int id) {
+
         final Task task = tasks.get(id);
         if (task == null) {
-            return;
+            return false;
         }
+        // Удаление задачи из истории просмотров
         historyManager.remove(task);
 
         // Удалить задачу из отсортированного списка
@@ -245,6 +246,7 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
 
         // удалить задачу
         tasks.remove(id);
+        return true;
     }
 
     @Override
@@ -272,11 +274,11 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
     }
 
     @Override
-    public void deleteEpic(int id) {
+    public boolean deleteEpic(int id) {
         // Проверка существования эпика
         Epic epic = epics.get(id);
         if (epic == null) {
-            return;
+            return false;
         }
         // Удаление подзадач из истории просмотра
         for (Subtask subTask : epic.getSubtasks().values())
@@ -297,6 +299,8 @@ public class InMemoryTaskManager implements TaskManager, Serializable {
         }
         // удаление эпика
         epics.remove(id);
+
+        return true;
     }
 
     @Override

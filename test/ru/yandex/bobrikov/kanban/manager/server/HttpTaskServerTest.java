@@ -269,7 +269,7 @@ class HttpTaskServerTest {
         Epic addedEpic = taskManager.addEpic(epic);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI uri = URI.create("http://localhost:" + PORT + "/tasks/epic/?id=" + addedEpic.getId());
+        URI uri = URI.create("http://localhost:" + PORT + "/tasks/epic/?id=" + addedEpic.getId()+"&status=done1");
         HttpRequest request = HttpRequest.newBuilder().uri(uri).GET().build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
 

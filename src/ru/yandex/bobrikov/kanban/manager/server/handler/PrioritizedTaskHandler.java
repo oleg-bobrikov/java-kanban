@@ -10,27 +10,17 @@ public class PrioritizedTaskHandler extends BaseHandler {
 
     @Override
     public void handle(HttpExchange exchange) {
+        super.handle(exchange);
         try {
-            String path = exchange.getRequestURI().getPath();
-            String requestMethod = exchange.getRequestMethod();
-            if (requestMethod.equals("GET")) {
-                if (path.equals("/tasks/")) {
-                    String response = gson.toJson(taskManager.getPrioritizedTasks());
-                    sendText(exchange, response);
-                    return;
-                }
-                System.out.println("Запрос GET " + exchange.getRequestURI() + " не поддерживается.");
-                exchange.sendResponseHeaders(405, 0);
-            } else {
-                System.out.println("Метод " + requestMethod + " не поддерживается!");
-                exchange.sendResponseHeaders(405, 0);
-            }
-
+            handleGet("/tasks/history/", this::prioritizedTasksToJson, null);
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
             exchange.close();
         }
+    }
 
+    private String prioritizedTasksToJson() {
+        return gson.toJson(taskManager.getPrioritizedTasks());
     }
 }
